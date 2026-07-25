@@ -1,0 +1,24 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Multi-module layout: the template only ignored /build and app/build, which misses
+# core/*, feature/*, and build-logic. A bare `build/` matches at any depth.
+build/
+# Kotlin compiler session data (root build and the included build-logic build).
+.kotlin/
+
+# Deliberately NOT ignored: core/database/schemas/ — Room schema JSON is checked in so
+# migrations can be diffed against a known-good baseline.
