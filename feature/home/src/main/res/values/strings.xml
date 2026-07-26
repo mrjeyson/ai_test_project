@@ -57,8 +57,153 @@
     <string name="map_error_unavailable">Couldn\'t get a fix. Showing the last known position.</string>
     <string name="map_error_generic">Location services returned an error. Showing the last known position.</string>
 
-    <!-- Placeholder copy. Each of these is deleted with the placeholder it belongs to,
-         as its tab is built. -->
-    <string name="home_placeholder_prayer">Daily prayer times will appear here.</string>
-    <string name="home_placeholder_weather">The local forecast will appear here.</string>
+    <!-- Prayer times -->
+
+    <!-- The status strip. Stated as a property the user can rely on rather than as a
+         warning: the times on screen came off disk and will still be there with the radio
+         off, which is the whole promise of the page. -->
+    <string name="prayer_cached_badge">CACHED FOR OFFLINE</string>
+    <!-- %1$s is a clock time, e.g. "12:45 PM". -->
+    <string name="prayer_last_update">Last update: %1$s</string>
+
+    <!-- %1$s is a prayer name, already uppercased by the caller so the tracking on the
+         label style applies to the whole line. -->
+    <string name="prayer_next_label">NEXT PRAYER: %1$s</string>
+    <!-- Sits after the countdown digits, which are a separate, much larger text. -->
+    <string name="prayer_remaining">remaining</string>
+    <!-- %1$s is a clock time. -->
+    <string name="prayer_starts_at">Starts at %1$s</string>
+    <!-- The same line for the hours between Isha and midnight, when the next prayer is on
+         a different date and saying only "Starts at 3:57 AM" would look like a mistake. -->
+    <string name="prayer_starts_at_tomorrow">Starts at %1$s tomorrow</string>
+    <!-- Shown when every prayer today has passed and tomorrow has not been cached — the
+         honest state after Isha on a device that has been offline since morning. -->
+    <string name="prayer_all_complete">All prayers complete for today</string>
+
+    <string name="prayer_daily_schedule">Daily Schedule</string>
+    <string name="prayer_status_completed">COMPLETED</string>
+    <string name="prayer_status_upcoming">UPCOMING</string>
+
+    <!-- The location row. "CHANGE" re-detects where the device is and refetches. -->
+    <string name="prayer_change_location">CHANGE</string>
+    <string name="prayer_locating">Locating…</string>
+
+    <!-- The five prayers. Duplicated in :core:data, which posts the notifications and
+         cannot see this module. -->
+    <string name="prayer_fajr">Fajr</string>
+    <string name="prayer_dhuhr">Dhuhr</string>
+    <string name="prayer_asr">Asr</string>
+    <string name="prayer_maghrib">Maghrib</string>
+    <string name="prayer_isha">Isha</string>
+
+    <!-- The time of day each falls at. Secondary to the name, and the reason the list is
+         readable to someone who does not know the names by heart. -->
+    <string name="prayer_fajr_caption">Dawn</string>
+    <string name="prayer_dhuhr_caption">Midday</string>
+    <string name="prayer_asr_caption">Afternoon</string>
+    <string name="prayer_maghrib_caption">Sunset</string>
+    <string name="prayer_isha_caption">Night</string>
+
+    <string name="prayer_retry">Retry</string>
+    <string name="prayer_dismiss">Dismiss</string>
+    <string name="prayer_allow">Allow</string>
+
+    <!-- Every one of these can appear above a timetable that is still on screen, so the
+         wording says what failed without implying the times are gone. -->
+    <string name="prayer_error_permission">Location is off, so prayer times can\'t follow you.</string>
+    <string name="prayer_error_no_location">Couldn\'t work out where you are. Showing the last saved times.</string>
+    <string name="prayer_error_unreachable">Can\'t reach the prayer time service. Showing saved times.</string>
+    <string name="prayer_error_generic">The prayer time service returned an error. Showing saved times.</string>
+
+    <string name="prayer_empty_title">No prayer times saved yet</string>
+    <string name="prayer_empty_body">Connect once and the whole day stays available offline, alerts included.</string>
+
+    <!-- Weather -->
+
+    <!-- The status strip. Same promise as the prayer page: what is on screen came off disk and
+         is still there with the radio off. -->
+    <string name="weather_cached_badge">CACHED FOR OFFLINE</string>
+    <!-- %1$s is a clock time, e.g. "12:45 PM". -->
+    <string name="weather_last_update">Updated %1$s</string>
+    <!-- Replaces the line above once the reading is over an hour old. A cached temperature is
+         only ever the last one known, unlike a cached prayer time, so saying how stale it is
+         matters more here than anywhere else in the app. -->
+    <string name="weather_stale">Last reading %1$s — may be out of date</string>
+
+    <string name="weather_current_location">CURRENT LOCATION</string>
+
+    <!-- The condition groups. Two jobs each: they describe the icon to a screen reader, and they
+         stand in for the headline caption when the provider sends no prose of its own. The
+         provider's own wording is preferred when there is any, being far more specific — "broken
+         clouds" rather than "Cloudy". -->
+    <string name="weather_condition_clear">Clear</string>
+    <string name="weather_condition_clouds">Cloudy</string>
+    <string name="weather_condition_rain">Rain</string>
+    <string name="weather_condition_drizzle">Drizzle</string>
+    <string name="weather_condition_thunderstorm">Thunderstorm</string>
+    <string name="weather_condition_snow">Snow</string>
+    <string name="weather_condition_mist">Mist</string>
+    <!-- A condition group this build does not recognise, which is possible because the group is
+         mapped from a code the provider may extend. Deliberately vague rather than a guess. -->
+    <string name="weather_condition_unknown">Unsettled</string>
+
+    <!-- The headline block. %1$d is a whole number of degrees, already rounded, and the degree
+         sign is part of the format rather than the value so it stays attached under RTL. -->
+    <string name="weather_temperature">%1$d°</string>
+    <string name="weather_high">High</string>
+    <string name="weather_low">Low</string>
+    <string name="weather_feels_like">Feels</string>
+
+    <!-- The short-range strip. Three-hour steps, not one-hour: the free tier of the provider
+         has no finer resolution, so the heading promises a window and not a cadence. -->
+    <string name="weather_hourly_title">Hourly Forecast</string>
+    <string name="weather_hourly_window">Next 24h</string>
+    <string name="weather_hourly_now">Now</string>
+
+    <string name="weather_details_title">Details</string>
+    <string name="weather_wind">Wind</string>
+    <string name="weather_humidity">Humidity</string>
+    <string name="weather_visibility">Visibility</string>
+    <!-- %1$d is a whole number of km/h, converted from the metres per second the provider
+         reports. -->
+    <string name="weather_wind_value">%1$d km/h</string>
+    <!-- %1$d is a percentage. -->
+    <string name="weather_humidity_value">%1$d%%</string>
+    <!-- %1$d is a whole number of kilometres. The provider caps its own reading at 10 km, so
+         this never reads higher than that even on a clear day over open country. -->
+    <string name="weather_visibility_value">%1$d km</string>
+    <!-- Shown when the provider omitted the reading, which it does rather than sending zero. -->
+    <string name="weather_value_unknown">—</string>
+
+    <!-- Five days, not seven: the provider's free forecast window is five, and promising a
+         seventh row the data cannot fill would be worse than naming the real number. -->
+    <string name="weather_daily_title">5-Day Forecast</string>
+    <string name="weather_daily_today">Today</string>
+
+    <!-- The location row. "REFRESH" re-detects where the device is and refetches, bypassing the
+         freshness window — the same control the prayer page calls CHANGE, named for what a user
+         wants from a weather page rather than a timetable. -->
+    <string name="weather_refresh">REFRESH</string>
+    <string name="weather_refreshing">Refreshing…</string>
+
+    <string name="weather_retry">Retry</string>
+    <string name="weather_dismiss">Dismiss</string>
+    <string name="weather_allow">Allow</string>
+
+    <!-- Every one of these can appear above readings that are still on screen, so the wording
+         says what failed without implying the page is gone. -->
+    <string name="weather_error_permission">Location is off, so the weather can\'t follow you.</string>
+    <string name="weather_error_no_location">Couldn\'t work out where you are. Showing the last saved reading.</string>
+    <string name="weather_error_unreachable">Can\'t reach the weather service. Showing the last saved reading.</string>
+    <string name="weather_error_generic">The weather service returned an error. Showing the last saved reading.</string>
+    <!-- A build-configuration fault, not a runtime one, so the wording names the fix rather than
+         suggesting the user try again. -->
+    <string name="weather_error_not_configured">No OpenWeatherMap key in this build. Add openweather.apiKey to local.properties and rebuild.</string>
+    <!-- The key is present and the provider said no. Names the overwhelmingly common cause rather
+         than telling the user to add a key they can see in their own local.properties — a newly
+         issued OpenWeatherMap key is inactive for a while after it is created. -->
+    <string name="weather_error_key_rejected">OpenWeatherMap rejected this key. A newly created key can take a couple of hours to activate.</string>
+
+    <string name="weather_empty_title">No weather saved yet</string>
+    <string name="weather_empty_body">Connect once and the last reading stays available offline.</string>
 </resources>

@@ -9,6 +9,6 @@ internal data object WeatherRouteKey
 
 internal fun NavGraphBuilder.weatherScreen() {
     composable<WeatherRouteKey> {
-        WeatherScreen()
+        WeatherRoute()
     }
 }

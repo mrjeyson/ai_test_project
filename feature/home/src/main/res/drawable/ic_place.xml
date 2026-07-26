@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marks the location row at the foot of the prayer page. Outlined, not the filled
+     Material pin, so it sits with the other icons on the page rather than shouting over
+     them. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,2.8 C8.6,2.8 5.9,5.5 5.9,8.9 C5.9,13.5 12,21.2 12,21.2 C12,21.2 18.1,13.5 18.1,8.9 C18.1,5.5 15.4,2.8 12,2.8 Z"
+        android:strokeColor="#FF000000"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.7" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,6.7 A2.2,2.2 0 1,0 12,11.1 A2.2,2.2 0 1,0 12,6.7 Z"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.7" />
+</vector>

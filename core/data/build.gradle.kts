@@ -20,4 +20,9 @@ dependencies {
     // Retrofit here: acquiring a fix is data-layer work, and :feature:home only renders
     // the cached result.
     implementation(libs.play.services.location)
+
+    // NotificationCompat and NotificationManagerCompat, for the prayer alerts. The alarms
+    // themselves need no dependency — AlarmManager is a platform service — but posting a
+    // notification that behaves the same from API 24 to 37 does.
+    implementation(libs.androidx.core.ktx)
 }

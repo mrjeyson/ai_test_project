@@ -9,6 +9,6 @@ internal data object PrayerTimesRouteKey
 
 internal fun NavGraphBuilder.prayerTimesScreen() {
     composable<PrayerTimesRouteKey> {
-        PrayerTimesScreen()
+        PrayerTimesRoute()
     }
 }

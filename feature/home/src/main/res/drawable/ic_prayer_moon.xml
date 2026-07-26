@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The prayers after sunset: Maghrib and Isha.
+
+     A crescent cut from one disc by another, as a single stroked path rather than two
+     overlapping shapes — an outline survives being tinted onto the dark row, where a
+     filled crescent would read as a blob. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M20,14.6 A8.6,8.6 0 1,1 9.4,4 A7,7 0 0,0 20,14.6 Z"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.7" />
+</vector>

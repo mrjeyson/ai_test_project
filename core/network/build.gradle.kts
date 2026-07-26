@@ -36,6 +36,21 @@ val tmdbApiKey: String = localProperties.getProperty("tmdb.apiKey")
     ?: providers.environmentVariable("TMDB_API_KEY").orNull
     ?: ""
 
+/**
+ * OpenWeatherMap key, read under the same rule as the TMDB credentials above.
+ *
+ * Only one to read, unlike TMDB: the provider issues a single key and accepts it only as an
+ * `appid` query parameter, so there is no second scheme to support.
+ *
+ * Absent resolves to empty rather than failing the build, so the project still compiles and
+ * its tests still run on a machine with no key. The interceptor turns the empty value into one
+ * clear, named error at request time — and the Weather tab shows whatever it last cached,
+ * which is the behaviour that tab is built around.
+ */
+val openWeatherApiKey: String = localProperties.getProperty("openweather.apiKey")
+    ?: providers.environmentVariable("OPENWEATHER_API_KEY").orNull
+    ?: ""
+
 android {
     namespace = "com.example.test_ai_project.core.network"
 
@@ -44,6 +59,7 @@ android {
     defaultConfig {
         buildConfigField("String", "TMDB_ACCESS_TOKEN", "\"$tmdbAccessToken\"")
         buildConfigField("String", "TMDB_API_KEY", "\"$tmdbApiKey\"")
+        buildConfigField("String", "OPENWEATHER_API_KEY", "\"$openWeatherApiKey\"")
     }
 
     buildTypes {

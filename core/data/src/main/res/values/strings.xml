@@ -1,0 +1,21 @@
+<resources>
+    <!-- Notification copy for the prayer alerts.
+
+         These live here, and not in :feature:home with the rest of the prayer strings,
+         because :core:data cannot see a feature module — and an alert that fires with the
+         app closed has to name the prayer without any UI layer being loaded. The five
+         names below are therefore duplicated between the two modules on purpose. -->
+
+    <string name="prayer_channel_name">Prayer times</string>
+    <string name="prayer_channel_description">Alerts at the start of each daily prayer.</string>
+
+    <!-- %1$s is the prayer name, e.g. "Asr". Phrased so the body still reads correctly
+         next to the title, which is the bare name on its own. -->
+    <string name="prayer_alert_body">It\'s time for the %1$s prayer.</string>
+
+    <string name="prayer_name_fajr">Fajr</string>
+    <string name="prayer_name_dhuhr">Dhuhr</string>
+    <string name="prayer_name_asr">Asr</string>
+    <string name="prayer_name_maghrib">Maghrib</string>
+    <string name="prayer_name_isha">Isha</string>
+</resources>
