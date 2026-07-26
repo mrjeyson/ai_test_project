@@ -1,7 +1,13 @@
 package com.example.test_ai_project.core.data.di
 
+import com.example.test_ai_project.core.data.repository.AuthRepositoryImpl
+import com.example.test_ai_project.core.data.repository.FaceVerificationRepositoryImpl
 import com.example.test_ai_project.core.data.repository.ItemRepositoryImpl
+import com.example.test_ai_project.core.data.time.SystemDateProvider
+import com.example.test_ai_project.core.domain.repository.AuthRepository
+import com.example.test_ai_project.core.domain.repository.FaceVerificationRepository
 import com.example.test_ai_project.core.domain.repository.ItemRepository
+import com.example.test_ai_project.core.domain.time.DateProvider
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,4 +27,19 @@ internal abstract class DataModule {
     internal abstract fun bindsItemRepository(
         implementation: ItemRepositoryImpl,
     ): ItemRepository
+
+    @Binds
+    internal abstract fun bindsAuthRepository(
+        implementation: AuthRepositoryImpl,
+    ): AuthRepository
+
+    @Binds
+    internal abstract fun bindsFaceVerificationRepository(
+        implementation: FaceVerificationRepositoryImpl,
+    ): FaceVerificationRepository
+
+    @Binds
+    internal abstract fun bindsDateProvider(
+        implementation: SystemDateProvider,
+    ): DateProvider
 }

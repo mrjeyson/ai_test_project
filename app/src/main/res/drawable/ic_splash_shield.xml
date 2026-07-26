@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The launch-window icon. Android reserves a 288dp canvas and only the inner ~192dp is
+     guaranteed visible inside the icon mask, so the 24-unit shield from :core:ui is scaled
+     to 120 units and centred rather than filling the frame. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="288dp"
+    android:height="288dp"
+    android:viewportWidth="288"
+    android:viewportHeight="288">
+    <group
+        android:scaleX="5"
+        android:scaleY="5"
+        android:translateX="84"
+        android:translateY="84">
+        <path
+            android:fillColor="@color/white"
+            android:pathData="M12,2.2 L4.6,5.3 C4.2,5.5 4,5.8 4,6.2 v5.1 c0,4.7 3.2,8.8 7.7,9.9 0.2,0.1 0.4,0.1 0.6,0 C16.8,20.1 20,16 20,11.3 V6.2 c0,-0.4 -0.2,-0.7 -0.6,-0.9 L12,2.2 Z" />
+    </group>
+</vector>

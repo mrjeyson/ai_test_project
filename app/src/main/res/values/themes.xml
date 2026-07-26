@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Test_ai_project" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- The theme the activity runs under once Compose takes over. windowBackground is
+         vault ink so no white frame flashes between the launch window and the splash
+         route. -->
+    <style name="Theme.SecureVault" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/vault_ink</item>
+    </style>
+
+    <!-- The launch window: the same shield-on-ink mark the splash route draws, so the
+         handover from system splash to Compose is invisible. Swapped for
+         Theme.SecureVault by installSplashScreen() in MainActivity. -->
+    <style name="Theme.SecureVault.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/vault_ink</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_shield</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/vault_ink_deep</item>
+        <item name="postSplashScreenTheme">@style/Theme.SecureVault</item>
+    </style>
 </resources>

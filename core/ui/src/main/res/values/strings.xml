@@ -1,0 +1,6 @@
+<resources>
+    <!-- Product name as it appears in the UI. Kept in the design-system module because
+         the wordmark composable owns it, not any single feature. -->
+    <string name="brand_name" translatable="false">SecureVault</string>
+    <string name="brand_logo_content_description">SecureVault shield</string>
+</resources>
