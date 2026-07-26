@@ -1,0 +1,42 @@
+<resources>
+    <!-- Navigation bar labels. Short by necessity — four items share the bar width, and
+         anything longer than "Weather" is ellipsised on a small screen. "Prayer" rather
+         than "Prayer times" for that reason; the page itself carries the full title. -->
+    <string name="home_tab_movies">Movies</string>
+    <string name="home_tab_map">Map</string>
+    <string name="home_tab_prayer">Prayer</string>
+    <string name="home_tab_weather">Weather</string>
+
+    <string name="home_local_secure">LOCAL SECURE</string>
+
+    <!-- Movies -->
+    <string name="movies_cached_badge">CACHED</string>
+    <!-- %1$s is a one-decimal score out of 10, e.g. "7.8". -->
+    <string name="movies_rating">★ %1$s</string>
+    <string name="movies_no_details">No details yet</string>
+
+    <string name="movies_previous_page">Previous page</string>
+    <string name="movies_next_page">Next page</string>
+    <!-- %1$d is a page number. Read out in place of the bare digit on the page control. -->
+    <string name="movies_go_to_page">Go to page %1$d</string>
+
+    <string name="movies_retry">Retry</string>
+    <string name="movies_dismiss">Dismiss</string>
+
+    <!-- Shown as a banner above content that is still on screen, so the wording has to
+         say what failed without implying the list is gone. -->
+    <string name="movies_error_unreachable">Can\'t reach the movie service. Showing cached movies.</string>
+    <string name="movies_error_generic">The movie service returned an error. Showing cached movies.</string>
+    <!-- A build-configuration fault, not a runtime one, so the wording names the fix
+         rather than suggesting the user try again. -->
+    <string name="movies_error_not_configured">No TMDB API key in this build. Add tmdb.apiKey to local.properties and rebuild.</string>
+
+    <string name="movies_empty_title">No movies cached yet</string>
+    <string name="movies_empty_body">Connect once and this page stays available offline.</string>
+
+    <!-- Placeholder copy. Each of these is deleted with the placeholder it belongs to,
+         as its tab is built. -->
+    <string name="home_placeholder_map">The offline map will appear here.</string>
+    <string name="home_placeholder_prayer">Daily prayer times will appear here.</string>
+    <string name="home_placeholder_weather">The local forecast will appear here.</string>
+</resources>

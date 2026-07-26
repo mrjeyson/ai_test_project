@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Folded map: three panels, the fold lines drawn separately so they do not pick up the
+     round joins of the outline. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M3,6 L9,4 L15,6 L21,4 V18 L15,20 L9,18 L3,20 Z"
+        android:strokeColor="#FF000000"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.7" />
+    <path
+        android:pathData="M9,4 V18"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.7" />
+    <path
+        android:pathData="M15,6 V20"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.7" />
+</vector>

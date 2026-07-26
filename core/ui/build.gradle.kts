@@ -15,4 +15,9 @@ dependencies {
     api(libs.androidx.compose.ui)
     api(libs.androidx.compose.ui.graphics)
     api(libs.androidx.compose.ui.tooling.preview)
+
+    // Also `api`: remote images are a design-system concern, and the alternative is every
+    // feature that shows one re-declaring Coil and drifting on version.
+    api(libs.coil.compose)
+    api(libs.coil.network.okhttp)
 }

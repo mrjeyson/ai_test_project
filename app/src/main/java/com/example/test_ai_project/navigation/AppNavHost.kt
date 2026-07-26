@@ -34,7 +34,7 @@ fun AppNavHost(
     ) {
         loginScreen(
             onAuthenticated = {
-                navController.navigateToFaceVerification {
+                navController.navigateToHome {
                     popUpTo<LoginRouteKey> { inclusive = true }
                 }
             },

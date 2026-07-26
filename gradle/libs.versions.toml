@@ -16,6 +16,7 @@ jvmTarget = "11"
 # Libraries
 activityCompose = "1.13.0"
 camerax = "1.5.3"
+coil = "3.3.0"
 composeBom = "2026.02.01"
 coreKtx = "1.19.0"
 coreSplashscreen = "1.2.0"
@@ -60,6 +61,12 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+
+# Image loading. `coil-network-okhttp` is what makes remote posters work at all — Coil 3
+# ships no network fetcher in the core artifact — and Coil's disk cache is what makes them
+# survive going offline.
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
 # Lifecycle / Navigation
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.test_ai_project.core.database.AppDatabase
 import com.example.test_ai_project.core.database.dao.ItemDao
+import com.example.test_ai_project.core.database.dao.MovieDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +29,9 @@ object DatabaseModule {
     // Exposed separately so consumers depend on the DAO, not the whole database.
     @Provides
     fun providesItemDao(database: AppDatabase): ItemDao = database.itemDao()
+
+    @Provides
+    fun providesMovieDao(database: AppDatabase): MovieDao = database.movieDao()
 
     private const val DATABASE_NAME = "test_ai_project.db"
 }

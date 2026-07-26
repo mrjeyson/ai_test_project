@@ -3,11 +3,15 @@ package com.example.test_ai_project.core.data.di
 import com.example.test_ai_project.core.data.repository.AuthRepositoryImpl
 import com.example.test_ai_project.core.data.repository.FaceVerificationRepositoryImpl
 import com.example.test_ai_project.core.data.repository.ItemRepositoryImpl
+import com.example.test_ai_project.core.data.repository.MovieRepositoryImpl
 import com.example.test_ai_project.core.data.time.SystemDateProvider
+import com.example.test_ai_project.core.data.time.SystemTimeProvider
 import com.example.test_ai_project.core.domain.repository.AuthRepository
 import com.example.test_ai_project.core.domain.repository.FaceVerificationRepository
 import com.example.test_ai_project.core.domain.repository.ItemRepository
+import com.example.test_ai_project.core.domain.repository.MovieRepository
 import com.example.test_ai_project.core.domain.time.DateProvider
+import com.example.test_ai_project.core.domain.time.TimeProvider
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,6 +33,11 @@ internal abstract class DataModule {
     ): ItemRepository
 
     @Binds
+    internal abstract fun bindsMovieRepository(
+        implementation: MovieRepositoryImpl,
+    ): MovieRepository
+
+    @Binds
     internal abstract fun bindsAuthRepository(
         implementation: AuthRepositoryImpl,
     ): AuthRepository
@@ -42,4 +51,9 @@ internal abstract class DataModule {
     internal abstract fun bindsDateProvider(
         implementation: SystemDateProvider,
     ): DateProvider
+
+    @Binds
+    internal abstract fun bindsTimeProvider(
+        implementation: SystemTimeProvider,
+    ): TimeProvider
 }

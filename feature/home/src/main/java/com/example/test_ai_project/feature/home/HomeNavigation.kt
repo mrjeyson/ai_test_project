@@ -9,6 +9,9 @@ import kotlinx.serialization.Serializable
 /**
  * The feature owns its own route and its own registration function, so `:app`
  * composes the graph without knowing which composable backs the destination.
+ *
+ * One destination, not four: the tabs live in a nested graph inside [HomeScreen], so the
+ * app graph — and back from home — sees the shell as a single stop.
  */
 @Serializable
 data object HomeRouteKey
@@ -19,6 +22,6 @@ fun NavController.navigateToHome(navOptions: NavOptionsBuilder.() -> Unit = {}) 
 
 fun NavGraphBuilder.homeScreen() {
     composable<HomeRouteKey> {
-        HomeRoute()
+        HomeScreen()
     }
 }

@@ -1,171 +1,218 @@
 package com.example.test_ai_project.feature.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.test_ai_project.core.model.Item
-import com.example.test_ai_project.core.ui.component.ErrorState
-import com.example.test_ai_project.core.ui.component.LoadingState
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.test_ai_project.core.ui.component.BrandWordmark
 import com.example.test_ai_project.core.ui.theme.AppTheme
+import com.example.test_ai_project.core.ui.theme.VaultHairline
+import com.example.test_ai_project.feature.home.navigation.HomeNavHost
+import com.example.test_ai_project.feature.home.navigation.HomeTab
+import com.example.test_ai_project.core.ui.R as CoreUiR
 
 /**
- * Stateful entry point: the only place in this file that touches Hilt or the
- * ViewModel. Keeping it separate from [HomeScreen] is what makes the screen
- * previewable and testable without a DI graph.
+ * The home shell: brand bar, navigation bar, and the frame the four tabs are drawn into.
+ *
+ * It owns no data of its own — the tabs behind [HomeNavHost] fetch what they render — so
+ * there is no `HomeRoute`/`HomeScreen` pair here. That split exists to keep Hilt out of a
+ * previewable composable, and with no ViewModel to inject there is nothing to split.
  */
 @Composable
-fun HomeRoute(
-    modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel(),
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
-
-    HomeScreen(
-        uiState = uiState,
-        isRefreshing = isRefreshing,
-        onRefresh = viewModel::refresh,
-        modifier = modifier,
-    )
-}
-
-/** Stateless and side-effect free — driven entirely by its parameters. */
-@Composable
 fun HomeScreen(
-    uiState: HomeUiState,
-    isRefreshing: Boolean,
-    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
 ) {
-    // Insets are the screen's own business — the app shell is a plain Surface so that
-    // screens like the viewfinder can draw full-bleed under the system bars.
-    Column(modifier = modifier.fillMaxSize().safeDrawingPadding()) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Items",
-                style = MaterialTheme.typography.headlineSmall,
-            )
-            Button(
-                onClick = onRefresh,
-                enabled = !isRefreshing,
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = backStackEntry?.destination
+
+    HomeShell(
+        selectedTab = HomeTab.entries.firstOrNull { currentDestination.isOn(it) },
+        onTabSelected = navController::switchTo,
+        modifier = modifier,
+    ) { contentModifier ->
+        HomeNavHost(navController = navController, modifier = contentModifier)
+    }
+}
+
+/**
+ * The chrome on its own, with the content area supplied by the caller.
+ *
+ * Splitting it out is what lets a `@Preview` — and later a screenshot test — exercise the
+ * real bar states without standing up a NavHost.
+ */
+@Composable
+private fun HomeShell(
+    selectedTab: HomeTab?,
+    onTabSelected: (HomeTab) -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable (Modifier) -> Unit,
+) {
+    Scaffold(
+        modifier = modifier,
+        topBar = { HomeTopBar() },
+        bottomBar = { HomeBottomBar(selectedTab = selectedTab, onTabSelected = onTabSelected) },
+        containerColor = MaterialTheme.colorScheme.background,
+    ) { innerPadding ->
+        // The content gets the insets as padding rather than the shell clipping to them, so
+        // a full-bleed page (the map) can consume them differently without fighting a parent.
+        content(Modifier.padding(innerPadding))
+    }
+}
+
+/**
+ * Brand and security status. Lives in the shell, not in a tab: it states a property of the
+ * app — everything here is on-device — which stays true whichever page is open.
+ */
+@Composable
+private fun HomeTopBar(modifier: Modifier = Modifier) {
+    Surface(modifier = modifier, color = MaterialTheme.colorScheme.surface) {
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = if (isRefreshing) "Refreshing…" else "Refresh")
-            }
-        }
-
-        when (uiState) {
-            HomeUiState.Loading -> LoadingState()
-
-            is HomeUiState.Error -> ErrorState(
-                message = uiState.message,
-                onRetry = onRefresh,
-            )
-
-            is HomeUiState.Success -> if (uiState.items.isEmpty()) {
-                EmptyState(onRefresh = onRefresh)
-            } else {
-                ItemList(items = uiState.items)
-            }
-        }
-    }
-}
-
-@Composable
-private fun ItemList(
-    items: List<Item>,
-    modifier: Modifier = Modifier,
-) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
-        items(items = items, key = { it.id }) { item ->
-            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)) {
-                Text(
-                    text = item.name,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                if (item.description.isNotBlank()) {
-                    Text(
-                        text = item.description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 4.dp),
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = CoreUiR.drawable.ic_shield),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(22.dp),
                     )
+                    BrandWordmark(modifier = Modifier.padding(start = 8.dp))
                 }
+
+                LocalSecureBadge()
             }
-            HorizontalDivider()
+
+            HorizontalDivider(color = VaultHairline)
+        }
+    }
+}
+
+/** The "LOCAL SECURE" status: the caption over the teal tick from the design. */
+@Composable
+private fun LocalSecureBadge(modifier: Modifier = Modifier) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.End) {
+        Text(
+            text = stringResource(id = R.string.home_local_secure),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Box(
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .size(18.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(5.dp),
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_check_small),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.size(12.dp),
+            )
         }
     }
 }
 
 @Composable
-private fun EmptyState(
-    onRefresh: () -> Unit,
+private fun HomeBottomBar(
+    selectedTab: HomeTab?,
+    onTabSelected: (HomeTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier.fillMaxSize().padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+    NavigationBar(
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 0.dp,
     ) {
-        Text(
-            text = "Nothing cached yet.",
-            style = MaterialTheme.typography.bodyLarge,
-        )
-        Button(
-            onClick = onRefresh,
-            modifier = Modifier.padding(top = 16.dp),
-        ) {
-            Text(text = "Load items")
+        HomeTab.entries.forEach { tab ->
+            NavigationBarItem(
+                selected = tab == selectedTab,
+                onClick = { onTabSelected(tab) },
+                icon = {
+                    Icon(
+                        painter = painterResource(id = tab.iconRes),
+                        // The label sits right below and is announced with the item, so
+                        // describing the icon as well would only repeat it.
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                },
+                label = { Text(text = stringResource(id = tab.labelRes)) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    indicatorColor = MaterialTheme.colorScheme.surfaceVariant,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
+            )
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun HomeScreenSuccessPreview() {
-    AppTheme {
-        HomeScreen(
-            uiState = HomeUiState.Success(
-                items = listOf(
-                    Item(id = 1, name = "First item", description = "A cached description."),
-                    Item(id = 2, name = "Second item", description = ""),
-                ),
-            ),
-            isRefreshing = false,
-            onRefresh = {},
-        )
+/**
+ * Matches against the whole hierarchy, not just the leaf: once a tab grows sub-pages, its
+ * bar item has to stay lit while the user is inside one of them.
+ */
+private fun NavDestination?.isOn(tab: HomeTab): Boolean =
+    this?.hierarchy?.any { it.hasRoute(tab.routeKey::class) } == true
+
+/**
+ * Re-tapping a tab must not stack a second copy of it, and returning to a tab must restore
+ * where the user left off — which is what the three options below buy, in that order.
+ */
+private fun NavHostController.switchTo(tab: HomeTab) {
+    navigate(tab.routeKey) {
+        popUpTo(graph.findStartDestination().id) { saveState = true }
+        launchSingleTop = true
+        restoreState = true
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun HomeScreenEmptyPreview() {
+private fun HomeShellPreview() {
     AppTheme {
-        HomeScreen(
-            uiState = HomeUiState.Success(items = emptyList()),
-            isRefreshing = false,
-            onRefresh = {},
-        )
+        HomeShell(selectedTab = HomeTab.Movies, onTabSelected = {}) { modifier ->
+            Box(modifier = modifier)
+        }
     }
 }
