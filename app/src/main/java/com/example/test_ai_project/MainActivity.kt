@@ -17,19 +17,20 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // Before super.onCreate: this is what swaps the launch-window theme for
-        // Theme.SecureVault. The system splash is not held open — the splash *route*
-        // owns bootstrap, and keeping both would show the mark twice.
+        // Theme.SecureVault. The window is not held open past the first frame — the
+        // launch mark is the whole of the launch experience, and login draws straight
+        // after it.
         installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            // Light is pinned rather than following the system: the designs are
-            // light-only, and the splash owns its dark tokens explicitly. This is the
-            // one line to change when a dark variant is designed.
-            AppTheme(darkTheme = false) {
-                // Surface, not Scaffold: the splash draws its own full-bleed gradient
-                // under the system bars, so the app shell must not inset it. Screens
-                // that need insets apply them themselves.
+            // AppTheme has a single light scheme and does not follow the system: the
+            // designs are light-only, and the screens that are dark — the viewfinder —
+            // own their tokens explicitly.
+            AppTheme {
+                // Surface, not Scaffold: the viewfinder draws full-bleed under the
+                // system bars, so the app shell must not inset it. Screens that need
+                // insets apply them themselves.
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,

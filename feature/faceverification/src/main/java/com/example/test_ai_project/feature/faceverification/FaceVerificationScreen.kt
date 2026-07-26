@@ -513,7 +513,7 @@ private const val SCRIM_ALPHA = 0.74f
 @Preview
 @Composable
 private fun FaceVerificationScanningPreview() {
-    AppTheme(darkTheme = true) {
+    AppTheme {
         FaceVerificationScreen(
             // Permission left Unknown so the preview draws the overlay without trying to
             // open a camera that does not exist in a render host.
@@ -531,7 +531,7 @@ private fun FaceVerificationScanningPreview() {
 @Preview
 @Composable
 private fun FaceVerificationConfirmingPreview() {
-    AppTheme(darkTheme = true) {
+    AppTheme {
         FaceVerificationScreen(
             uiState = FaceVerificationUiState(
                 phase = VerificationPhase.Confirming,

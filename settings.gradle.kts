@@ -39,7 +39,6 @@ include(":core:network")
 include(":core:ui")
 
 // Features — one self-contained vertical slice per screen
-include(":feature:splash")
 include(":feature:login")
 include(":feature:faceverification")
 include(":feature:home")

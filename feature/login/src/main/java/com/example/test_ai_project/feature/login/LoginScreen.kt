@@ -490,7 +490,7 @@ private const val EARLIEST_YEAR = 1900
 @Preview(showBackground = true)
 @Composable
 private fun LoginScreenPreview() {
-    AppTheme(darkTheme = false) {
+    AppTheme {
         LoginScreen(
             uiState = LoginUiState(
                 dateOfBirthDigits = "01021990",
@@ -509,7 +509,7 @@ private fun LoginScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun LoginScreenErrorPreview() {
-    AppTheme(darkTheme = false) {
+    AppTheme {
         LoginScreen(
             uiState = LoginUiState(
                 dateOfBirthDigits = "3102",

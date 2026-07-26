@@ -1,8 +1,0 @@
-<resources>
-    <!-- Stored pre-uppercased rather than transformed at render time: `uppercase()` is
-         locale-sensitive (Turkish dotless i), and translators should own the casing. -->
-    <string name="splash_stage_local_environment">INITIALIZING LOCAL ENVIRONMENT…</string>
-    <string name="splash_stage_secure_storage">UNLOCKING SECURE STORAGE…</string>
-    <string name="splash_stage_session">RESTORING SESSION…</string>
-    <string name="splash_stage_ready">READY</string>
-</resources>

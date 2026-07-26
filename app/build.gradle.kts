@@ -27,7 +27,6 @@ dependencies {
     // The app module is pure assembly: it wires features into a nav graph and owns the
     // Hilt root. :core:data is present only so its @Module bindings land in the
     // SingletonComponent — no app code imports from it.
-    implementation(project(":feature:splash"))
     implementation(project(":feature:login"))
     implementation(project(":feature:faceverification"))
     implementation(project(":feature:home"))
@@ -38,8 +37,8 @@ dependencies {
     // exports; the Compose BOM comes from the compose convention.
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
-    // Backports the Android 12 splash screen window to API 24, so the launch window
-    // matches the splash route on every supported device.
+    // Backports the Android 12 splash screen window to API 24, so the branded launch
+    // window looks the same on every supported device.
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.compose)

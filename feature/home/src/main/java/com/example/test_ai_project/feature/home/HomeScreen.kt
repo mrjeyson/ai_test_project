@@ -55,8 +55,8 @@ fun HomeScreen(
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // Insets are the screen's own business — the app shell is a plain Surface so the
-    // splash can draw full-bleed under the system bars.
+    // Insets are the screen's own business — the app shell is a plain Surface so that
+    // screens like the viewfinder can draw full-bleed under the system bars.
     Column(modifier = modifier.fillMaxSize().safeDrawingPadding()) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),

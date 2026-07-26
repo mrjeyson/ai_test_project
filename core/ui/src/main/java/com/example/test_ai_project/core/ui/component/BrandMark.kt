@@ -21,12 +21,12 @@ import com.example.test_ai_project.core.ui.theme.AppTheme
 import com.example.test_ai_project.core.ui.theme.VaultInkDeep
 
 /**
- * The shield in its rounded tile. Splash and authentication both show the same mark, so
- * it lives here rather than being redrawn per screen.
+ * The shield in its rounded tile. Every surface that shows the brand shows the same mark,
+ * so it lives here rather than being redrawn per screen.
  *
- * [tileColor] is a parameter because the tile is not one colour: on the dark splash it is
- * near-black so the mark reads as a cut-out, while on light surfaces it is the brand
- * accent.
+ * [tileColor] is a parameter because the tile is not one colour: on dark surfaces it
+ * defaults to near-black so the mark reads as a cut-out, while on light surfaces callers
+ * pass the brand accent.
  */
 @Composable
 fun BrandLogo(
@@ -70,7 +70,7 @@ private const val SHIELD_RATIO = 0.47f
 @Preview
 @Composable
 private fun BrandMarkOnLightPreview() {
-    AppTheme(darkTheme = false) {
+    AppTheme {
         Box(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center,

@@ -58,8 +58,8 @@ val Typography = Typography(
         lineHeight = 16.sp,
         letterSpacing = 1.2.sp,
     ),
-    // Splash status captions — tracking is opened further to keep 11sp uppercase
-    // legible against a dark background.
+    // Status captions — tracking is opened further to keep 11sp uppercase legible
+    // against a dark background.
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,

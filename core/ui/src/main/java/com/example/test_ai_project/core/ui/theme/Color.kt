@@ -8,11 +8,10 @@ import androidx.compose.ui.graphics.Color
 /** The brand accent: primary buttons, links, the logo tile on light surfaces. */
 val VaultTeal = Color(0xFF0F7A6B)
 
-/** The accent lightened for dark surfaces, where [VaultTeal] fails contrast. */
+/** The accent lightened for the viewfinder, where [VaultTeal] fails contrast. */
 val VaultTealLight = Color(0xFF5FD0BC)
 
 val VaultOnTeal = Color(0xFFFFFFFF)
-val VaultOnTealDark = Color(0xFF00382F)
 
 // Light surfaces — authentication and everything past it.
 
@@ -34,14 +33,11 @@ val VaultStone = Color(0xFF5E6C74)
 /** Field borders and dividers — visible without competing with the content. */
 val VaultHairline = Color(0xFFE2E8E8)
 
-// Dark surfaces — the splash, which stays dark whatever the system setting.
+// Dark surfaces — the launch window, which the platform draws before Compose exists.
+// Both are mirrored in the app module's colors.xml and must be kept in step with it.
 
+/** The launch window background. */
 val VaultInk = Color(0xFF171B28)
-val VaultInkElevated = Color(0xFF1E2233)
 
 /** Darker than the background: the logo tile reads as a cut-out, not a raised card. */
 val VaultInkDeep = Color(0xFF0D0E14)
-
-val VaultOnInk = Color(0xFFE4E2F2)
-val VaultOnInkMuted = Color(0xFF6C7189)
-val VaultOutline = Color(0xFF262B3D)

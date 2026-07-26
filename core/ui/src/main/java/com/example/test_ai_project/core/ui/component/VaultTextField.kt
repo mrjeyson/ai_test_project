@@ -101,7 +101,7 @@ private val FieldCornerRadius = 10.dp
 @Preview(showBackground = true)
 @Composable
 private fun VaultTextFieldPreview() {
-    AppTheme(darkTheme = false) {
+    AppTheme {
         Box(modifier = Modifier.padding(16.dp)) {
             VaultTextField(
                 value = "",

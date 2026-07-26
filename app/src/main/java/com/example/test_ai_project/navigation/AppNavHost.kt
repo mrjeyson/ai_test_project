@@ -13,15 +13,13 @@ import com.example.test_ai_project.feature.home.navigateToHome
 import com.example.test_ai_project.feature.login.LoginRouteKey
 import com.example.test_ai_project.feature.login.loginScreen
 import com.example.test_ai_project.feature.login.navigateToLogin
-import com.example.test_ai_project.feature.splash.SplashRouteKey
-import com.example.test_ai_project.feature.splash.splashScreen
 
 /**
  * The app's only job in navigation: pick the start destination and list the
  * feature graphs. Adding a feature means one `include` in settings.gradle.kts,
  * one dependency, and one line here.
  *
- * Launch order — splash, login, face verification, home — lives here and nowhere else:
+ * Launch order — login, face verification, home — lives here and nowhere else:
  * each feature reports that it is finished and this graph decides what follows.
  */
 @Composable
@@ -31,18 +29,9 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = SplashRouteKey,
+        startDestination = LoginRouteKey,
         modifier = modifier,
     ) {
-        splashScreen(
-            onFinished = {
-                navController.navigateToLogin {
-                    // Bootstrap must not be replayable: `back` from login exits the app.
-                    popUpTo<SplashRouteKey> { inclusive = true }
-                }
-            },
-        )
-
         loginScreen(
             onAuthenticated = {
                 navController.navigateToFaceVerification {
