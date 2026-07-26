@@ -15,4 +15,9 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:database"))
     implementation(project(":core:network"))
+
+    // The fused location provider. Confined to this module by the same rule that confines
+    // Retrofit here: acquiring a fix is data-layer work, and :feature:home only renders
+    // the cached result.
+    implementation(libs.play.services.location)
 }

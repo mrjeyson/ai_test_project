@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.test_ai_project.core.database.AppDatabase
 import com.example.test_ai_project.core.database.dao.ItemDao
+import com.example.test_ai_project.core.database.dao.LocationDao
 import com.example.test_ai_project.core.database.dao.MovieDao
 import dagger.Module
 import dagger.Provides
@@ -32,6 +33,9 @@ object DatabaseModule {
 
     @Provides
     fun providesMovieDao(database: AppDatabase): MovieDao = database.movieDao()
+
+    @Provides
+    fun providesLocationDao(database: AppDatabase): LocationDao = database.locationDao()
 
     private const val DATABASE_NAME = "test_ai_project.db"
 }

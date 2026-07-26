@@ -24,8 +24,14 @@ coroutines = "1.11.0"
 hilt = "2.60.1"
 hiltExt = "1.4.0"
 lifecycle = "2.11.0"
+# maps-compose 7.x is the last line built against Kotlin 2.2.x and Compose BOM 2025.12 —
+# both at or below what this project compiles with. 8.x pulls kotlin-stdlib 2.3 and a
+# newer Compose BOM, which would drag the whole build forward for no feature we use.
+mapsCompose = "7.0.0"
 mlkitFaceDetection = "16.1.7"
 navigationCompose = "2.9.8"
+playServicesLocation = "21.4.0"
+playServicesMaps = "19.2.0"
 okhttp = "5.4.0"
 retrofit = "3.0.0"
 room = "2.8.4"
@@ -81,6 +87,14 @@ androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", 
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 mlkit-face-detection = { group = "com.google.mlkit", name = "face-detection", version.ref = "mlkitFaceDetection" }
+
+# Maps and location. `maps-compose` renders the map; `play-services-maps` is the SDK
+# underneath it (declared explicitly rather than leaned on transitively, since feature code
+# imports LatLng and CameraPosition directly). `play-services-location` is the fused
+# provider, and belongs to :core:data alone — no feature module talks to it.
+maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "mapsCompose" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 # Dependency injection
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }

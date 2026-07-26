@@ -34,9 +34,31 @@
     <string name="movies_empty_title">No movies cached yet</string>
     <string name="movies_empty_body">Connect once and this page stays available offline.</string>
 
+    <!-- Map -->
+    <string name="map_content_description">Map of your surroundings</string>
+    <string name="map_recentre">Centre on my location</string>
+    <string name="map_marker_title">You are here</string>
+    <!-- %1$d is a radius in metres. Deliberately hedged: the figure is a confidence
+         radius, not a margin the fix is guaranteed to sit inside. -->
+    <string name="map_marker_accuracy">Accurate to about %1$d m</string>
+    <string name="map_cached_badge">LAST KNOWN</string>
+
+    <string name="map_retry">Retry</string>
+    <string name="map_dismiss">Dismiss</string>
+
+    <!-- Offered after a refusal, so it states the consequence rather than repeating the
+         request. The map is still on screen and still usable. -->
+    <string name="map_permission_body">Location is off, so the map can\'t follow you.</string>
+    <string name="map_permission_action">Allow</string>
+
+    <!-- Every one of these appears above a map that is still showing the cached position,
+         so the wording says what failed without implying the map is gone. -->
+    <string name="map_error_permission">Location permission was revoked. Showing the last known position.</string>
+    <string name="map_error_unavailable">Couldn\'t get a fix. Showing the last known position.</string>
+    <string name="map_error_generic">Location services returned an error. Showing the last known position.</string>
+
     <!-- Placeholder copy. Each of these is deleted with the placeholder it belongs to,
          as its tab is built. -->
-    <string name="home_placeholder_map">The offline map will appear here.</string>
     <string name="home_placeholder_prayer">Daily prayer times will appear here.</string>
     <string name="home_placeholder_weather">The local forecast will appear here.</string>
 </resources>

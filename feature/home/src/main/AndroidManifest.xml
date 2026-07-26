@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Declared by the feature that needs them, not by :app — the permission travels with
+     the module, so removing the feature removes the permission. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Coarse is listed first because it is the weaker grant and the map is usable with
+         it alone: a city-block-accurate centre still answers "where am I". Fine is asked
+         for alongside it, and the screen works with whichever the user allows. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- required="false": a device with no GPS hardware still gets network-derived fixes
+         and, failing that, the cached last-known position. -->
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+
+    <application>
+
+        <!-- Substituted from `maps.apiKey` in local.properties by this module's build
+             script; never a literal, so the key stays out of version control. -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+    </application>
+
+</manifest>

@@ -9,6 +9,6 @@ internal data object MapRouteKey
 
 internal fun NavGraphBuilder.mapScreen() {
     composable<MapRouteKey> {
-        MapScreen()
+        MapRoute()
     }
 }

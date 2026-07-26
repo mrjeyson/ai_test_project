@@ -3,12 +3,16 @@ package com.example.test_ai_project.core.data.di
 import com.example.test_ai_project.core.data.repository.AuthRepositoryImpl
 import com.example.test_ai_project.core.data.repository.FaceVerificationRepositoryImpl
 import com.example.test_ai_project.core.data.repository.ItemRepositoryImpl
+import com.example.test_ai_project.core.data.repository.LocationRepositoryImpl
+import com.example.test_ai_project.core.data.repository.MapCameraRepositoryImpl
 import com.example.test_ai_project.core.data.repository.MovieRepositoryImpl
 import com.example.test_ai_project.core.data.time.SystemDateProvider
 import com.example.test_ai_project.core.data.time.SystemTimeProvider
 import com.example.test_ai_project.core.domain.repository.AuthRepository
 import com.example.test_ai_project.core.domain.repository.FaceVerificationRepository
 import com.example.test_ai_project.core.domain.repository.ItemRepository
+import com.example.test_ai_project.core.domain.repository.LocationRepository
+import com.example.test_ai_project.core.domain.repository.MapCameraRepository
 import com.example.test_ai_project.core.domain.repository.MovieRepository
 import com.example.test_ai_project.core.domain.time.DateProvider
 import com.example.test_ai_project.core.domain.time.TimeProvider
@@ -36,6 +40,16 @@ internal abstract class DataModule {
     internal abstract fun bindsMovieRepository(
         implementation: MovieRepositoryImpl,
     ): MovieRepository
+
+    @Binds
+    internal abstract fun bindsLocationRepository(
+        implementation: LocationRepositoryImpl,
+    ): LocationRepository
+
+    @Binds
+    internal abstract fun bindsMapCameraRepository(
+        implementation: MapCameraRepositoryImpl,
+    ): MapCameraRepository
 
     @Binds
     internal abstract fun bindsAuthRepository(
