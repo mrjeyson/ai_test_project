@@ -25,4 +25,3 @@ fun NavGraphBuilder.homeScreen() {
         HomeScreen()
     }
 }
-
