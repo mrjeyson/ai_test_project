@@ -1,0 +1,320 @@
+<resources>
+
+    <!-- ===================================================================
+         Every user-facing string in the app lives here.
+
+         Centralised so that a screen cannot introduce a literal, and so the
+         same wording is reused rather than re-typed per feature. Names follow
+         <area>_<purpose>, which is what keeps this file navigable as it grows.
+         =================================================================== -->
+
+    <!-- ============================ Brand ============================= -->
+    <!-- Product name as it appears in the UI. Kept in the design-system module because
+         the wordmark composable owns it, not any single feature. -->
+    <string name="brand_name" translatable="false">SecureVault</string>
+    <string name="brand_logo_content_description">SecureVault shield</string>
+
+    <!-- ========================= Shared actions ======================= -->
+    <string name="action_retry">Retry</string>
+
+    <!-- ===================== Prayer notifications ===================== -->
+    <!-- Notification copy for the prayer alerts.
+
+         These live here, and not in :feature:home with the rest of the prayer strings,
+         because :core:data cannot see a feature module — and an alert that fires with the
+         app closed has to name the prayer without any UI layer being loaded. The five
+         names below are therefore duplicated between the two modules on purpose. -->
+
+    <string name="prayer_channel_name">Prayer times</string>
+    <string name="prayer_channel_description">Alerts at the start of each daily prayer.</string>
+
+    <!-- %1$s is the prayer name, e.g. "Asr". Phrased so the body still reads correctly
+         next to the title, which is the bare name on its own. -->
+    <string name="prayer_alert_body">It\'s time for the %1$s prayer.</string>
+
+    <string name="prayer_name_fajr">Fajr</string>
+    <string name="prayer_name_dhuhr">Dhuhr</string>
+    <string name="prayer_name_asr">Asr</string>
+    <string name="prayer_name_maghrib">Maghrib</string>
+    <string name="prayer_name_isha">Isha</string>
+
+    <!-- ============================ Login ============================= -->
+    <string name="login_subtitle">Local Data Authentication</string>
+
+    <!-- Field labels are shown in small caps; casing is stored rather than applied at
+         render time, because `uppercase()` is locale-sensitive. -->
+    <string name="login_date_of_birth_label">DATE OF BIRTH</string>
+    <string name="login_date_of_birth_placeholder">dd/mm/yyyy</string>
+    <string name="login_date_of_birth_picker">Pick a date of birth</string>
+    <string name="login_passport_number_label">PASSPORT NUMBER</string>
+    <string name="login_passport_number_placeholder">Passport number</string>
+    <string name="login_passport_number_show">Show passport number</string>
+    <string name="login_passport_number_hide">Hide passport number</string>
+    <string name="login_encrypted_at_rest">Encrypted at rest</string>
+    <string name="login_continue">Continue</string>
+    <string name="login_date_picker_confirm">Set</string>
+    <string name="login_date_picker_dismiss">Cancel</string>
+
+    <string name="login_trust_chip">END-TO-END LOCAL ENCRYPTION</string>
+    <string name="login_privacy_note">Your data never leaves this device. Authentication is handled on-chip for maximum privacy.</string>
+    <string name="login_support">Support</string>
+    <string name="login_whitepaper">Security Whitepaper</string>
+
+    <!-- Placeholder destinations: swap for the real ones when they exist. -->
+    <string name="login_support_url" translatable="false">https://securevault.example/support</string>
+    <string name="login_whitepaper_url" translatable="false">https://securevault.example/security-whitepaper</string>
+
+    <string name="login_error_date_incomplete">Enter all eight digits, as dd/mm/yyyy.</string>
+    <string name="login_error_date_not_real">That is not a real date.</string>
+    <string name="login_error_date_in_future">A date of birth cannot be in the future.</string>
+    <string name="login_error_passport_empty">Enter the passport number.</string>
+    <string name="login_error_passport_too_short">Passport numbers are at least 6 characters.</string>
+    <string name="login_error_passport_invalid_characters">Use letters and digits only.</string>
+    <string name="login_error_credentials_rejected">Those details do not match this device\'s vault.</string>
+    <string name="login_error_vault_unavailable">Secure storage is unavailable. Try again.</string>
+    <string name="login_no_browser">No app available to open that link.</string>
+
+    <!-- ====================== Face verification ======================= -->
+    <string name="face_verification_title">Local Verification</string>
+    <string name="face_verification_offline_badge">Offline model ready</string>
+    <string name="face_verification_processing_offline">PROCESSING SECURELY OFFLINE</string>
+
+    <string name="face_verification_align_title">Align your face</string>
+    <string name="face_verification_align_body">Please align your face within the frame for local verification.</string>
+    <string name="face_verification_hold_still_title">Hold still</string>
+    <string name="face_verification_hold_still_body">Your face is in frame. Confirm to verify on this device.</string>
+    <string name="face_verification_body_multiple_faces">More than one face is in frame. Verification needs just you.</string>
+    <string name="face_verification_body_too_far">Move a little closer to the camera.</string>
+    <string name="face_verification_body_too_close">Move back slightly.</string>
+    <string name="face_verification_body_off_centre">Centre your face inside the frame.</string>
+    <string name="face_verification_body_turned">Look straight at the camera.</string>
+
+    <string name="face_verification_confirming_title">Confirming…</string>
+    <string name="face_verification_confirming_body">Matching against the enrolment on this device.</string>
+    <string name="face_verification_verified_title">Verified</string>
+    <string name="face_verification_verified_body">Local verification complete.</string>
+
+    <string name="face_verification_permission_title">Camera access needed</string>
+    <string name="face_verification_permission_body">Verification runs on this device\'s camera. Nothing is uploaded.</string>
+    <string name="face_verification_camera_unavailable_title">Camera unavailable</string>
+    <string name="face_verification_camera_unavailable_body">The front camera could not be opened. It may be in use by another app.</string>
+    <string name="face_verification_failure_no_match">That face does not match this device\'s enrolment.</string>
+    <string name="face_verification_failure_sensor">The on-device matcher could not run.</string>
+
+    <string name="face_verification_action_confirm">Confirm</string>
+    <string name="face_verification_action_confirming">Confirming…</string>
+    <string name="face_verification_action_verified">Verified</string>
+    <string name="face_verification_action_retry">Try again</string>
+    <string name="face_verification_action_allow_camera">Allow camera access</string>
+    <string name="face_verification_cancel">Cancel</string>
+
+    <!-- ============================= Home ============================= -->
+    <!-- Navigation bar labels. Short by necessity — four items share the bar width, and
+         anything longer than "Weather" is ellipsised on a small screen. "Prayer" rather
+         than "Prayer times" for that reason; the page itself carries the full title. -->
+    <string name="home_tab_movies">Movies</string>
+    <string name="home_tab_map">Map</string>
+    <string name="home_tab_prayer">Prayer</string>
+    <string name="home_tab_weather">Weather</string>
+
+    <string name="home_local_secure">LOCAL SECURE</string>
+
+    <!-- Movies -->
+    <string name="movies_cached_badge">CACHED</string>
+    <!-- %1$s is a one-decimal score out of 10, e.g. "7.8". -->
+    <string name="movies_rating">★ %1$s</string>
+    <string name="movies_no_details">No details yet</string>
+
+    <string name="movies_previous_page">Previous page</string>
+    <string name="movies_next_page">Next page</string>
+    <!-- %1$d is a page number. Read out in place of the bare digit on the page control. -->
+    <string name="movies_go_to_page">Go to page %1$d</string>
+
+    <string name="movies_retry">Retry</string>
+    <string name="movies_dismiss">Dismiss</string>
+
+    <!-- Shown as a banner above content that is still on screen, so the wording has to
+         say what failed without implying the list is gone. -->
+    <string name="movies_error_unreachable">Can\'t reach the movie service. Showing cached movies.</string>
+    <string name="movies_error_generic">The movie service returned an error. Showing cached movies.</string>
+    <!-- A build-configuration fault, not a runtime one, so the wording names the fix
+         rather than suggesting the user try again. -->
+    <string name="movies_error_not_configured">No TMDB API key in this build. Add tmdb.apiKey to local.properties and rebuild.</string>
+
+    <string name="movies_empty_title">No movies cached yet</string>
+    <string name="movies_empty_body">Connect once and this page stays available offline.</string>
+
+    <!-- Map -->
+    <string name="map_content_description">Map of your surroundings</string>
+    <string name="map_recentre">Centre on my location</string>
+    <string name="map_marker_title">You are here</string>
+    <!-- %1$d is a radius in metres. Deliberately hedged: the figure is a confidence
+         radius, not a margin the fix is guaranteed to sit inside. -->
+    <string name="map_marker_accuracy">Accurate to about %1$d m</string>
+    <string name="map_cached_badge">LAST KNOWN</string>
+
+    <string name="map_retry">Retry</string>
+    <string name="map_dismiss">Dismiss</string>
+
+    <!-- Offered after a refusal, so it states the consequence rather than repeating the
+         request. The map is still on screen and still usable. -->
+    <string name="map_permission_body">Location is off, so the map can\'t follow you.</string>
+    <string name="map_permission_action">Allow</string>
+
+    <!-- Every one of these appears above a map that is still showing the cached position,
+         so the wording says what failed without implying the map is gone. -->
+    <string name="map_error_permission">Location permission was revoked. Showing the last known position.</string>
+    <string name="map_error_unavailable">Couldn\'t get a fix. Showing the last known position.</string>
+    <string name="map_error_generic">Location services returned an error. Showing the last known position.</string>
+
+    <!-- Prayer times -->
+
+    <!-- The status strip. Stated as a property the user can rely on rather than as a
+         warning: the times on screen came off disk and will still be there with the radio
+         off, which is the whole promise of the page. -->
+    <string name="prayer_cached_badge">CACHED FOR OFFLINE</string>
+    <!-- %1$s is a clock time, e.g. "12:45 PM". -->
+    <string name="prayer_last_update">Last update: %1$s</string>
+
+    <!-- %1$s is a prayer name, already uppercased by the caller so the tracking on the
+         label style applies to the whole line. -->
+    <string name="prayer_next_label">NEXT PRAYER: %1$s</string>
+    <!-- Sits after the countdown digits, which are a separate, much larger text. -->
+    <string name="prayer_remaining">remaining</string>
+    <!-- %1$s is a clock time. -->
+    <string name="prayer_starts_at">Starts at %1$s</string>
+    <!-- The same line for the hours between Isha and midnight, when the next prayer is on
+         a different date and saying only "Starts at 3:57 AM" would look like a mistake. -->
+    <string name="prayer_starts_at_tomorrow">Starts at %1$s tomorrow</string>
+    <!-- Shown when every prayer today has passed and tomorrow has not been cached — the
+         honest state after Isha on a device that has been offline since morning. -->
+    <string name="prayer_all_complete">All prayers complete for today</string>
+
+    <string name="prayer_daily_schedule">Daily Schedule</string>
+    <string name="prayer_status_completed">COMPLETED</string>
+    <string name="prayer_status_upcoming">UPCOMING</string>
+
+    <!-- The location row. "CHANGE" re-detects where the device is and refetches. -->
+    <string name="prayer_change_location">CHANGE</string>
+    <string name="prayer_locating">Locating…</string>
+
+    <!-- The five prayers. Duplicated in :core:data, which posts the notifications and
+         cannot see this module. -->
+    <string name="prayer_fajr">Fajr</string>
+    <string name="prayer_dhuhr">Dhuhr</string>
+    <string name="prayer_asr">Asr</string>
+    <string name="prayer_maghrib">Maghrib</string>
+    <string name="prayer_isha">Isha</string>
+
+    <!-- The time of day each falls at. Secondary to the name, and the reason the list is
+         readable to someone who does not know the names by heart. -->
+    <string name="prayer_fajr_caption">Dawn</string>
+    <string name="prayer_dhuhr_caption">Midday</string>
+    <string name="prayer_asr_caption">Afternoon</string>
+    <string name="prayer_maghrib_caption">Sunset</string>
+    <string name="prayer_isha_caption">Night</string>
+
+    <string name="prayer_retry">Retry</string>
+    <string name="prayer_dismiss">Dismiss</string>
+    <string name="prayer_allow">Allow</string>
+
+    <!-- Every one of these can appear above a timetable that is still on screen, so the
+         wording says what failed without implying the times are gone. -->
+    <string name="prayer_error_permission">Location is off, so prayer times can\'t follow you.</string>
+    <string name="prayer_error_no_location">Couldn\'t work out where you are. Showing the last saved times.</string>
+    <string name="prayer_error_unreachable">Can\'t reach the prayer time service. Showing saved times.</string>
+    <string name="prayer_error_generic">The prayer time service returned an error. Showing saved times.</string>
+
+    <string name="prayer_empty_title">No prayer times saved yet</string>
+    <string name="prayer_empty_body">Connect once and the whole day stays available offline, alerts included.</string>
+
+    <!-- Weather -->
+
+    <!-- The status strip. Same promise as the prayer page: what is on screen came off disk and
+         is still there with the radio off. -->
+    <string name="weather_cached_badge">CACHED FOR OFFLINE</string>
+    <!-- %1$s is a clock time, e.g. "12:45 PM". -->
+    <string name="weather_last_update">Updated %1$s</string>
+    <!-- Replaces the line above once the reading is over an hour old. A cached temperature is
+         only ever the last one known, unlike a cached prayer time, so saying how stale it is
+         matters more here than anywhere else in the app. -->
+    <string name="weather_stale">Last reading %1$s — may be out of date</string>
+
+    <string name="weather_current_location">CURRENT LOCATION</string>
+
+    <!-- The condition groups. Two jobs each: they describe the icon to a screen reader, and they
+         stand in for the headline caption when the provider sends no prose of its own. The
+         provider's own wording is preferred when there is any, being far more specific — "broken
+         clouds" rather than "Cloudy". -->
+    <string name="weather_condition_clear">Clear</string>
+    <string name="weather_condition_clouds">Cloudy</string>
+    <string name="weather_condition_rain">Rain</string>
+    <string name="weather_condition_drizzle">Drizzle</string>
+    <string name="weather_condition_thunderstorm">Thunderstorm</string>
+    <string name="weather_condition_snow">Snow</string>
+    <string name="weather_condition_mist">Mist</string>
+    <!-- A condition group this build does not recognise, which is possible because the group is
+         mapped from a code the provider may extend. Deliberately vague rather than a guess. -->
+    <string name="weather_condition_unknown">Unsettled</string>
+
+    <!-- The headline block. %1$d is a whole number of degrees, already rounded, and the degree
+         sign is part of the format rather than the value so it stays attached under RTL. -->
+    <string name="weather_temperature">%1$d°</string>
+    <string name="weather_high">High</string>
+    <string name="weather_low">Low</string>
+    <string name="weather_feels_like">Feels</string>
+
+    <!-- The short-range strip. Three-hour steps, not one-hour: the free tier of the provider
+         has no finer resolution, so the heading promises a window and not a cadence. -->
+    <string name="weather_hourly_title">Hourly Forecast</string>
+    <string name="weather_hourly_window">Next 24h</string>
+    <string name="weather_hourly_now">Now</string>
+
+    <string name="weather_details_title">Details</string>
+    <string name="weather_wind">Wind</string>
+    <string name="weather_humidity">Humidity</string>
+    <string name="weather_visibility">Visibility</string>
+    <!-- %1$d is a whole number of km/h, converted from the metres per second the provider
+         reports. -->
+    <string name="weather_wind_value">%1$d km/h</string>
+    <!-- %1$d is a percentage. -->
+    <string name="weather_humidity_value">%1$d%%</string>
+    <!-- %1$d is a whole number of kilometres. The provider caps its own reading at 10 km, so
+         this never reads higher than that even on a clear day over open country. -->
+    <string name="weather_visibility_value">%1$d km</string>
+    <!-- Shown when the provider omitted the reading, which it does rather than sending zero. -->
+    <string name="weather_value_unknown">—</string>
+
+    <!-- Five days, not seven: the provider's free forecast window is five, and promising a
+         seventh row the data cannot fill would be worse than naming the real number. -->
+    <string name="weather_daily_title">5-Day Forecast</string>
+    <string name="weather_daily_today">Today</string>
+
+    <!-- The location row. "REFRESH" re-detects where the device is and refetches, bypassing the
+         freshness window — the same control the prayer page calls CHANGE, named for what a user
+         wants from a weather page rather than a timetable. -->
+    <string name="weather_refresh">REFRESH</string>
+    <string name="weather_refreshing">Refreshing…</string>
+
+    <string name="weather_retry">Retry</string>
+    <string name="weather_dismiss">Dismiss</string>
+    <string name="weather_allow">Allow</string>
+
+    <!-- Every one of these can appear above readings that are still on screen, so the wording
+         says what failed without implying the page is gone. -->
+    <string name="weather_error_permission">Location is off, so the weather can\'t follow you.</string>
+    <string name="weather_error_no_location">Couldn\'t work out where you are. Showing the last saved reading.</string>
+    <string name="weather_error_unreachable">Can\'t reach the weather service. Showing the last saved reading.</string>
+    <string name="weather_error_generic">The weather service returned an error. Showing the last saved reading.</string>
+    <!-- A build-configuration fault, not a runtime one, so the wording names the fix rather than
+         suggesting the user try again. -->
+    <string name="weather_error_not_configured">No OpenWeatherMap key in this build. Add openweather.apiKey to local.properties and rebuild.</string>
+    <!-- The key is present and the provider said no. Names the overwhelmingly common cause rather
+         than telling the user to add a key they can see in their own local.properties — a newly
+         issued OpenWeatherMap key is inactive for a while after it is created. -->
+    <string name="weather_error_key_rejected">OpenWeatherMap rejected this key. A newly created key can take a couple of hours to activate.</string>
+
+    <string name="weather_empty_title">No weather saved yet</string>
+    <string name="weather_empty_body">Connect once and the last reading stays available offline.</string>
+
+</resources>

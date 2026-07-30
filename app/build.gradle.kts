@@ -1,6 +1,7 @@
 plugins {
-    id("testaiproject.android.application.compose")
-    id("testaiproject.android.hilt")
+    id("testai.android.app")
+    id("testai.android.compose")
+    id("testai.android.hilt")
 }
 
 android {
@@ -24,16 +25,22 @@ android {
 }
 
 dependencies {
-    // The app module is pure assembly: it wires features into a nav graph and owns the
-    // Hilt root. :core:data is present only so its @Module bindings land in the
-    // SingletonComponent — no app code imports from it.
-    implementation(project(":feature:login"))
-    implementation(project(":feature:faceverification"))
-    implementation(project(":feature:home"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:data"))
+    // The app module is pure assembly: it wires screens into a nav graph and owns the
+    // Hilt root.
+    //
+    // Note the split. A `presentation` module is an `implementation` dependency because
+    // the nav graph calls into it; its matching `data` module is `runtimeOnly`, so its
+    // service implementations join the Hilt graph at run time and are invisible at compile
+    // time. That is what actually stops a screen reaching past its own service contracts —
+    // the rule is enforced by the classpath, not by review.
+    implementation(project(":core:resource"))
 
-    // Material 3 and the Compose UI artifacts arrive transitively via :core:ui's `api`
+    implementation(project(":feature:auth:presentation"))
+    runtimeOnly(project(":feature:auth:data"))
+    implementation(project(":feature:home:presentation"))
+    runtimeOnly(project(":feature:home:data"))
+
+    // Material 3 and the Compose UI artifacts arrive transitively via :core:resource's `api`
     // exports; the Compose BOM comes from the compose convention.
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)

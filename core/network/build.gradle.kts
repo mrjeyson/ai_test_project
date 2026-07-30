@@ -1,8 +1,8 @@
 import java.util.Properties
 
 plugins {
-    id("testaiproject.android.library")
-    id("testaiproject.android.hilt")
+    id("testai.android.library")
+    id("testai.android.hilt")
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -52,7 +52,7 @@ val openWeatherApiKey: String = localProperties.getProperty("openweather.apiKey"
     ?: ""
 
 android {
-    namespace = "com.example.test_ai_project.core.network"
+    namespace = "com.example.test_ai_project.network"
 
     // The only module that needs BuildConfig — the android.library convention deliberately
     // leaves buildFeatures.buildConfig alone so this opt-in works.

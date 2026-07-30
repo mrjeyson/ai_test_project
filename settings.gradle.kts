@@ -29,16 +29,15 @@ rootProject.name = "test_ai_project"
 
 include(":app")
 
-// Core — shared, feature-agnostic layers
-include(":core:model")
-include(":core:common")
-include(":core:domain")
-include(":core:data")
-include(":core:database")
+// core — shared, feature-agnostic infrastructure
+include(":core:resource")
 include(":core:network")
-include(":core:ui")
+include(":core:database")
 
-// Features — one self-contained vertical slice per screen
-include(":feature:login")
-include(":feature:faceverification")
-include(":feature:home")
+// features — one domain/data/presentation trio per feature
+include(":feature:auth:domain")
+include(":feature:auth:data")
+include(":feature:auth:presentation")
+include(":feature:home:domain")
+include(":feature:home:data")
+include(":feature:home:presentation")

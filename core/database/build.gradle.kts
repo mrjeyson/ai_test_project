@@ -1,12 +1,12 @@
 plugins {
-    id("testaiproject.android.library")
-    id("testaiproject.android.hilt")
-    id("testaiproject.android.room")
+    id("testai.android.library")
+    id("testai.android.hilt")
+    id("testai.android.room")
 }
 
 android {
-    namespace = "com.example.test_ai_project.core.database"
+    namespace = "com.example.test_ai_project.database"
 }
 
 // Room artifacts, the KSP processor, and the checked-in schema directory all come from
-// the `testaiproject.android.room` convention.
+// the `testai.android.room` convention.

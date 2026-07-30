@@ -18,37 +18,35 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("androidApplication") {
-            id = "testaiproject.android.application"
-            implementationClass = "AndroidApplicationConventionPlugin"
-        }
-        register("androidApplicationCompose") {
-            id = "testaiproject.android.application.compose"
-            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        register("androidApp") {
+            id = "testai.android.app"
+            implementationClass =
+                "com.example.test_ai_project.convention.AndroidAppConventionPlugin"
         }
         register("androidLibrary") {
-            id = "testaiproject.android.library"
-            implementationClass = "AndroidLibraryConventionPlugin"
-        }
-        register("androidLibraryCompose") {
-            id = "testaiproject.android.library.compose"
-            implementationClass = "AndroidLibraryComposeConventionPlugin"
+            id = "testai.android.library"
+            implementationClass =
+                "com.example.test_ai_project.convention.AndroidLibraryConventionPlugin"
         }
         register("androidFeature") {
-            id = "testaiproject.android.feature"
-            implementationClass = "AndroidFeatureConventionPlugin"
+            id = "testai.android.feature"
+            implementationClass =
+                "com.example.test_ai_project.convention.AndroidFeatureConventionPlugin"
+        }
+        register("androidCompose") {
+            id = "testai.android.compose"
+            implementationClass =
+                "com.example.test_ai_project.convention.AndroidComposeConventionPlugin"
         }
         register("androidHilt") {
-            id = "testaiproject.android.hilt"
-            implementationClass = "AndroidHiltConventionPlugin"
+            id = "testai.android.hilt"
+            implementationClass =
+                "com.example.test_ai_project.convention.AndroidHiltConventionPlugin"
         }
         register("androidRoom") {
-            id = "testaiproject.android.room"
-            implementationClass = "AndroidRoomConventionPlugin"
-        }
-        register("jvmLibrary") {
-            id = "testaiproject.jvm.library"
-            implementationClass = "JvmLibraryConventionPlugin"
+            id = "testai.android.room"
+            implementationClass =
+                "com.example.test_ai_project.convention.AndroidRoomConventionPlugin"
         }
     }
 }
