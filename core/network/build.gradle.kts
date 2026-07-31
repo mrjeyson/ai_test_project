@@ -78,9 +78,25 @@ android {
 
 dependencies {
     api(libs.kotlinx.serialization.json)
-    api(libs.retrofit.core)
-    implementation(libs.retrofit.kotlinx.serialization)
+
+    // `api`, not `implementation`, for one specific reason: `safeApiCall` is an inline
+    // function and its body catches Ktor's `ResponseException`, so every module that calls
+    // it needs that type on its own compile classpath. The API classes in this module leak
+    // no Ktor type of their own — they take DTOs in and hand DTOs back.
+    api(libs.ktor.client.core)
+
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
+
+    // The engine. OkHttp rather than CIO or the Android engine: it is the one already in
+    // this app — Coil's network fetcher is built on it — so it adds no second HTTP stack,
+    // and the BOM keeps Ktor's transitive OkHttp on the version pinned here.
     implementation(platform(libs.okhttp.bom))
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.okhttp.core)
-    implementation(libs.okhttp.logging)
+
+    // MockEngine stands in for the engine, so the API classes and the auth plugins are
+    // testable against recorded requests with no socket and no local server.
+    testImplementation(libs.ktor.client.mock)
 }

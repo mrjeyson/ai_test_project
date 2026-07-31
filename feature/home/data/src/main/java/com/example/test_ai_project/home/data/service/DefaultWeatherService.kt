@@ -17,7 +17,9 @@ import com.example.test_ai_project.home.domain.model.WeatherSnapshot
 import com.example.test_ai_project.network.api.OpenWeatherApi
 import com.example.test_ai_project.network.dto.CurrentWeatherResponseDto
 import com.example.test_ai_project.network.dto.ForecastResponseDto
-import com.example.test_ai_project.network.interceptor.OpenWeatherNotConfiguredException
+import com.example.test_ai_project.network.plugin.OpenWeatherNotConfiguredException
+import io.ktor.client.plugins.ResponseException
+import io.ktor.http.HttpStatusCode
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,7 +31,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 
 /**
  * Offline-first, in the same strict sense as [DefaultMovieService]: Room is the only thing the
@@ -146,11 +147,12 @@ class DefaultWeatherService @Inject constructor(
      * OpenWeatherMap, so it is the only one that can turn the provider's exceptions into
      * something the domain — and the screen above it — can act on.
      *
-     * The 401 is worth singling out. Retrofit raises [HttpException] for any non-2xx, which is a
-     * `RuntimeException` and so lands in the UI's catch-all "the service returned an error" —
-     * wording that sends the reader to check their connection when the answer is their key. A
-     * rejected key is the single most likely first-run failure here, because OpenWeatherMap issues
-     * keys inactive and takes a while to switch them on.
+     * The 401 is worth singling out. Ktor raises [ResponseException] for any non-2xx — the
+     * clients are configured with `expectSuccess = true` — and it is an `IllegalStateException`,
+     * so it lands in the UI's catch-all "the service returned an error": wording that sends the
+     * reader to check their connection when the answer is their key. A rejected key is the single
+     * most likely first-run failure here, because OpenWeatherMap issues keys inactive and takes a
+     * while to switch them on.
      */
     private inline fun <T> translatingConfigErrors(request: () -> T): T =
         try {
@@ -160,11 +162,11 @@ class DefaultWeatherService @Inject constructor(
                 message = notConfigured.message.orEmpty(),
                 cause = notConfigured,
             )
-        } catch (http: HttpException) {
-            if (http.code() != HTTP_UNAUTHORIZED) throw http
+        } catch (response: ResponseException) {
+            if (response.response.status != HttpStatusCode.Unauthorized) throw response
             throw WeatherKeyRejectedException(
                 message = "OpenWeatherMap rejected the API key in this build.",
-                cause = http,
+                cause = response,
             )
         }
 
@@ -223,8 +225,5 @@ class DefaultWeatherService @Inject constructor(
         val MAX_AGE = 15.minutes
 
         const val RELOCATION_THRESHOLD_METERS = 5_000f
-
-        /** The provider's answer for both an absent key and one it has not activated yet. */
-        const val HTTP_UNAUTHORIZED = 401
     }
 }

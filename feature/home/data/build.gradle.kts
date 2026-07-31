@@ -13,7 +13,7 @@ dependencies {
     implementation(project(":core:network"))
 
     // The fused location provider. Confined to this module by the same rule that confines
-    // Retrofit here: acquiring a fix is data-layer work, and the map only renders the
+    // the HTTP client here: acquiring a fix is data-layer work, and the map only renders the
     // cached result.
     implementation(libs.play.services.location)
 

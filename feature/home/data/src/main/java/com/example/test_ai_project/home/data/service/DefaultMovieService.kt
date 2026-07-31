@@ -11,7 +11,7 @@ import com.example.test_ai_project.home.domain.service.MovieService
 import com.example.test_ai_project.home.domain.service.TimeProvider
 import com.example.test_ai_project.home.domain.model.MoviePage
 import com.example.test_ai_project.network.api.TmdbApi
-import com.example.test_ai_project.network.interceptor.TmdbNotConfiguredException
+import com.example.test_ai_project.network.plugin.TmdbNotConfiguredException
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.hours

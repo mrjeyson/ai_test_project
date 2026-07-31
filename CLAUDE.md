@@ -164,11 +164,28 @@ is watching, and makes `advanceUntilIdle()` hang in tests.
 
 ## Data layer
 
-- **Network** (`:core:network`): Retrofit + OkHttp + kotlinx.serialization. `AppResult`,
-  `AppError` and `safeApiCall { }` in `result/` normalize Retrofit/IO exceptions into
-  values; `AppError` is `Network`/`Server(code)`/`Unauthorized`/`Unknown`. Per-provider
-  clients (TMDB, Aladhan, OpenWeather) are separate so an auth interceptor never runs for
-  the wrong host. Credentials come from `local.properties` or env vars, never checked in.
+- **Network** (`:core:network`): **Ktor** client, OkHttp engine, kotlinx.serialization via
+  `ContentNegotiation`. `AppResult`, `AppError` and `safeApiCall { }` in `result/` normalize
+  Ktor/IO exceptions into values; `AppError` is
+  `Network`/`Server(code)`/`Unauthorized`/`Unknown`. Per-provider `HttpClient`s (TMDB,
+  Aladhan, OpenWeather) are separate — each with its own `@Tmdb`/`@Aladhan`/`@OpenWeather`
+  qualifier — so an auth plugin never runs for the wrong host; all three share one
+  `HttpClientEngine` rather than one connection pool each. Credentials come from
+  `local.properties` or env vars, never checked in.
+  - An endpoint is a **class over an `HttpClient`** in `api/`, not an annotated interface —
+    Ktor has no reflective proxy. Request paths are **relative**; the base URL comes from
+    `defaultRequest`, and a leading `/` would discard it (that is what would silently drop
+    TMDB's `/3`). `AladhanApiTest` and friends pin the resolved URL for exactly that reason.
+  - `expectSuccess = true` on every client. Ktor returns a non-2xx as an ordinary value by
+    default, so without it a 500's error page would be parsed as a movie list. With it,
+    failures arrive as `ResponseException` — what `safeApiCall` and the weather feature's
+    401 handling are written against.
+  - Auth lives in `plugin/` as Ktor client plugins (`TmdbAuth`, `OpenWeatherAuth`), one per
+    credentialed provider, installed only on that provider's client.
+  - `RedactingLogger` scrubs the credentials that travel as query parameters (`appid`,
+    `api_key`) out of every log line, on both the request and the response leg. The bearer
+    header is handled by `Logging`'s own `sanitizeHeader`. Redaction rather than plugin
+    ordering: ordering can only ever hide the outbound leg.
 - **Database** (`:core:database`): Room `AppDatabase`, DAOs in `dao/`, entities in `entity/`.
   Schemas are exported to `core/database/schemas/` and every step is an `AutoMigration`;
   v6 drops the generated `items` scaffolding via a `@DeleteTable` `AutoMigrationSpec`.
@@ -203,14 +220,24 @@ and there is no `org.jetbrains.kotlin.android` plugin to apply.
   `StandardTestDispatcher` when a test needs to observe in-flight state.
 - ViewModel tests drive `onEvent(...)` and assert on `uiState` and `effects`. Fake the
   *service* interface — it is the only thing a ViewModel can reach, so one fake replaces
-  Room, Retrofit and the platform at once.
+  Room, Ktor and the platform at once.
+- `:core:network` tests go through Ktor's **`MockEngine`**, not a local server. `MockBackend`
+  (in that module's `testing/`) builds a client through `NetworkModule.httpClient` — the
+  production configuration — with the engine swapped and every request recorded, so the URL
+  merge, `expectSuccess` and content negotiation under test are the real ones. Only the log
+  *sink* is swapped; `RedactingLogger` stays in place so a test can assert a credential never
+  reaches the log.
 - Screens whose ViewModel has a ticking clock must not use `advanceUntilIdle()`; those
   tests carry a `settle()` helper that advances the scheduler without draining an infinite
   ticker.
 
 ## Key constraints
 
-- Retrofit (not Ktor) for HTTP; Room (not SQLDelight) for local DB.
+- **Ktor** (not Retrofit) for HTTP; Room (not SQLDelight) for local DB. Ktor is pinned to the
+  3.3 line — 3.4+ constrains `kotlin-stdlib` to 2.3, past the Kotlin 2.2.10 this project
+  compiles with.
+- OkHttp stays, as Ktor's **engine** and as Coil's network fetcher — it is not an HTTP API
+  anyone calls directly. No `Interceptor` anywhere: request-time behaviour is a Ktor plugin.
 - No UseCase classes — services hold domain logic; no api/impl split.
 - Hilt DI everywhere; `@Singleton` for services that hold state.
 - Images: `AppNetworkImage` (Coil 3); the `ImageLoader` and its disk cache are configured

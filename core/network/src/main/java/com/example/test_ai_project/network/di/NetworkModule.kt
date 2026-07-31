@@ -1,22 +1,27 @@
 package com.example.test_ai_project.network.di
 
 import com.example.test_ai_project.network.BuildConfig
-import com.example.test_ai_project.network.api.AladhanApi
-import com.example.test_ai_project.network.api.OpenWeatherApi
-import com.example.test_ai_project.network.api.TmdbApi
-import com.example.test_ai_project.network.interceptor.OpenWeatherAuthInterceptor
-import com.example.test_ai_project.network.interceptor.TmdbAuthInterceptor
+import com.example.test_ai_project.network.plugin.OpenWeatherAuth
+import com.example.test_ai_project.network.plugin.RedactingLogger
+import com.example.test_ai_project.network.plugin.TmdbAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.url
+import io.ktor.http.HttpHeaders
+import io.ktor.serialization.kotlinx.json.json
 import javax.inject.Singleton
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -32,134 +37,125 @@ object NetworkModule {
     }
 
     /**
-     * Shared by every client below.
+     * One engine, shared by all three clients below.
      *
-     * Neither redaction is decoration. The level is BODY in debug builds, so without
-     * `redactHeader` the TMDB bearer token would be written to logcat on every request.
+     * `HttpClient(engine)` borrows an engine rather than owning one, which is what makes the
+     * sharing safe: three `HttpClient(OkHttp)` calls would each spin up their own dispatcher,
+     * connection pool and thread set, for three hosts this app talks to a handful of times a
+     * session. Sharing one is also what the OkHttp version of this module did, for that reason.
      *
-     * `redactQueryParams` covers the two credentials that travel in the URL instead —
-     * OpenWeatherMap's `appid` and TMDB's v3 `api_key`. Installing this interceptor *before*
-     * the auth interceptors keeps them out of the request line, because an application
-     * interceptor logs the request as it arrives and the key is attached after it. That is not
-     * enough on its own, and the gap is easy to miss: the response is logged from
-     * `response.request.url`, which is the URL that actually went out — with the credential on
-     * it. Ordering hides the key going out; only redaction hides it coming back.
+     * Nothing closes it. These are process-lifetime singletons and a closed engine cannot be
+     * reopened, so the only thing an explicit shutdown could achieve is a dead HTTP stack in a
+     * still-running app.
      */
     @Provides
     @Singleton
-    fun providesHttpLoggingInterceptor(): HttpLoggingInterceptor =
-        HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.LOG_HTTP_BODIES) {
-                HttpLoggingInterceptor.Level.BODY
-            } else {
-                HttpLoggingInterceptor.Level.NONE
-            }
-            redactHeader("Authorization")
-            redactQueryParams("appid", "api_key")
-        }
-
-    @Provides
-    @Singleton
-    fun providesOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-    ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .build()
+    fun providesHttpClientEngine(): HttpClientEngine = OkHttp.create()
 
     /**
-     * A separate client, not just a second base URL: the auth interceptor has to run for
-     * TMDB and must never run for anything else.
-     *
-     * Logging is installed *before* auth, and the order is load-bearing: application
-     * interceptors log the request as it reaches them, so logging never sees the credential on
-     * the way out. It does see it on the way back, though — the response is logged from the
-     * URL that actually went out — so the v3 `api_key` is redacted by name on the shared
-     * interceptor rather than left to ordering.
+     * The log sink, wrapped so URL credentials never reach it — see [RedactingLogger]. That
+     * wrapping is the entire reason this is a binding and not a literal inside [httpClient].
+     */
+    @Provides
+    @Singleton
+    fun providesHttpLogger(): Logger = RedactingLogger()
+
+    /**
+     * A client of its own, not just a second base URL: the auth plugin has to run for TMDB and
+     * must never run for anything else. Everything the three share is in [httpClient], so what
+     * is written here is only ever what differs.
      */
     @Provides
     @Singleton
     @Tmdb
-    fun providesTmdbOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-    ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .addInterceptor(
-            TmdbAuthInterceptor(
-                accessToken = BuildConfig.TMDB_ACCESS_TOKEN,
-                apiKey = BuildConfig.TMDB_API_KEY,
-            ),
-        )
-        .build()
-
-    @Provides
-    @Singleton
-    @Tmdb
-    fun providesTmdbRetrofit(
-        @Tmdb okHttpClient: OkHttpClient,
+    fun providesTmdbHttpClient(
+        engine: HttpClientEngine,
         json: Json,
-    ): Retrofit = Retrofit.Builder()
-        .baseUrl(TMDB_BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(json.asConverterFactory(JSON_MEDIA_TYPE.toMediaType()))
-        .build()
-
-    @Provides
-    @Singleton
-    fun providesTmdbApi(@Tmdb retrofit: Retrofit): TmdbApi = retrofit.create(TmdbApi::class.java)
+        logger: Logger,
+    ): HttpClient = httpClient(engine, json, logger, TMDB_BASE_URL) {
+        install(TmdbAuth) {
+            accessToken = BuildConfig.TMDB_ACCESS_TOKEN
+            apiKey = BuildConfig.TMDB_API_KEY
+        }
+    }
 
     /**
-     * A third base URL, on the *unauthenticated* client.
+     * The one client with no auth plugin at all.
      *
-     * The contrast with the TMDB instance above is the point: Aladhan needs no credential,
-     * so it takes the plain client and never comes near the auth interceptor. Only the base
-     * URL differs from the default Retrofit, which is why this shares everything else.
+     * The contrast with the other two is the point: Aladhan needs no credential, so nothing is
+     * installed here that could attach one. Only the base URL differs from a bare client.
      */
     @Provides
     @Singleton
     @Aladhan
-    fun providesAladhanRetrofit(
-        okHttpClient: OkHttpClient,
+    fun providesAladhanHttpClient(
+        engine: HttpClientEngine,
         json: Json,
-    ): Retrofit = Retrofit.Builder()
-        .baseUrl(ALADHAN_BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(json.asConverterFactory(JSON_MEDIA_TYPE.toMediaType()))
-        .build()
-
-    @Provides
-    @Singleton
-    fun providesAladhanApi(@Aladhan retrofit: Retrofit): AladhanApi =
-        retrofit.create(AladhanApi::class.java)
+        logger: Logger,
+    ): HttpClient = httpClient(engine, json, logger, ALADHAN_BASE_URL)
 
     @Provides
     @Singleton
     @OpenWeather
-    fun providesOpenWeatherOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-    ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .addInterceptor(OpenWeatherAuthInterceptor(apiKey = BuildConfig.OPENWEATHER_API_KEY))
-        .build()
-
-    @Provides
-    @Singleton
-    @OpenWeather
-    fun providesOpenWeatherRetrofit(
-        @OpenWeather okHttpClient: OkHttpClient,
+    fun providesOpenWeatherHttpClient(
+        engine: HttpClientEngine,
         json: Json,
-    ): Retrofit = Retrofit.Builder()
-        .baseUrl(OPEN_WEATHER_BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(json.asConverterFactory(JSON_MEDIA_TYPE.toMediaType()))
-        .build()
+        logger: Logger,
+    ): HttpClient = httpClient(engine, json, logger, OPEN_WEATHER_BASE_URL) {
+        install(OpenWeatherAuth) {
+            apiKey = BuildConfig.OPENWEATHER_API_KEY
+        }
+    }
 
-    @Provides
-    @Singleton
-    fun providesOpenWeatherApi(@OpenWeather retrofit: Retrofit): OpenWeatherApi =
-        retrofit.create(OpenWeatherApi::class.java)
+    /**
+     * Everything the three clients have in common.
+     *
+     * `expectSuccess` is the line worth pausing on. Ktor hands a non-2xx response back as an
+     * ordinary value where Retrofit threw — and quietly parsing an error page as though it were
+     * a movie list is precisely the failure this app cannot have. Turning it on restores the
+     * throw, as `ResponseException`, which is what `safeApiCall` and the feature-level 401
+     * handling are written against.
+     *
+     * [baseUrl] must end in `/`. Ktor concatenates a relative request path onto the base's own
+     * segments after dropping its last one, so `…/3` without the slash plus `movie/popular`
+     * would resolve to `/movie/popular` and lose the API version.
+     *
+     * `internal` rather than private so the tests can build a client through this exact function
+     * with a `MockEngine` in place of the engine. A test that re-declared the configuration would
+     * only prove its own copy right, and the thing most worth pinning down here — how a relative
+     * path merges onto [baseUrl] — lives in the configuration and nowhere else.
+     */
+    internal fun httpClient(
+        engine: HttpClientEngine,
+        json: Json,
+        logger: Logger,
+        baseUrl: String,
+        configure: HttpClientConfig<*>.() -> Unit = {},
+    ): HttpClient = HttpClient(engine) {
+        expectSuccess = true
 
-    private const val TMDB_BASE_URL = "https://api.themoviedb.org/3/"
-    private const val ALADHAN_BASE_URL = "https://api.aladhan.com/"
-    private const val OPEN_WEATHER_BASE_URL = "https://api.openweathermap.org/"
-    private const val JSON_MEDIA_TYPE = "application/json"
+        install(ContentNegotiation) {
+            json(json)
+        }
+
+        install(Logging) {
+            this.logger = logger
+            level = if (BuildConfig.LOG_HTTP_BODIES) LogLevel.ALL else LogLevel.NONE
+            // The bearer token, on both legs. The credentials that travel as query parameters
+            // are scrubbed by the logger itself, where no install order can betray them.
+            sanitizeHeader { header -> header.equals(HttpHeaders.Authorization, ignoreCase = true) }
+        }
+
+        defaultRequest {
+            url(baseUrl)
+        }
+
+        configure()
+    }
+
+    // `internal`, for the same reason as [httpClient]: the endpoint tests assert the full URL a
+    // call resolves to, and they have to start from the base URL the app actually ships.
+    internal const val TMDB_BASE_URL = "https://api.themoviedb.org/3/"
+    internal const val ALADHAN_BASE_URL = "https://api.aladhan.com/"
+    internal const val OPEN_WEATHER_BASE_URL = "https://api.openweathermap.org/"
 }

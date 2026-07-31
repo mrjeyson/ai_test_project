@@ -24,7 +24,7 @@ import javax.inject.Singleton
  * Binds the home feature's service contracts to their implementations.
  *
  * This is the seam that lets `:feature:home:presentation` be compiled — and tested against
- * fakes — without ever seeing Room, Retrofit or AlarmManager. `:app` puts this module on
+ * fakes — without ever seeing Room, Ktor or AlarmManager. `:app` puts this module on
  * the runtime classpath with `runtimeOnly`.
  */
 @Module

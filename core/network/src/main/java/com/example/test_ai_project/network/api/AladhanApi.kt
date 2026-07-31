@@ -1,39 +1,56 @@
 package com.example.test_ai_project.network.api
 
+import com.example.test_ai_project.network.di.Aladhan
 import com.example.test_ai_project.network.dto.PrayerTimingsResponseDto
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.http.appendPathSegments
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * The Aladhan prayer-time endpoints the app uses.
  *
  * Chosen over TMDB-style key authentication because it needs none: a build with no
  * credentials configured still shows real prayer times, which matters for a screen whose
- * whole promise is that it keeps working when other things do not.
+ * whole promise is that it keeps working when other things do not. That is visible in the
+ * constructor — this is the one API on the *unauthenticated* client, so there is no plugin
+ * between it and the wire.
  *
  * One day per request, rather than the provider's month-at-a-time `/calendar` endpoint.
  * The caller fetches exactly the two days the schedule spans, so a month response would be
  * fifteen times the payload for data that is discarded on the next visit — and the two-day
  * window still has to be requested across a month boundary anyway.
  */
-interface AladhanApi {
+@Singleton
+class AladhanApi @Inject constructor(
+    @Aladhan private val client: HttpClient,
+) {
 
     /**
      * Prayer times for one date at one place.
      *
      * @param date `DD-MM-YYYY`. The provider's own format, and not negotiable — a path
      *   segment it cannot parse is answered with times for *today* rather than an error,
-     *   which is the worst possible failure mode for a cache keyed by date.
+     *   which is the worst possible failure mode for a cache keyed by date. Appended as a
+     *   path *segment* rather than interpolated into the path string, so a value that ever
+     *   stops being URL-safe is encoded instead of silently reshaping the URL.
      */
-    @GET("v1/timings/{date}")
     suspend fun getTimings(
-        @Path("date") date: String,
-        @Query("latitude") latitude: Double,
-        @Query("longitude") longitude: Double,
-        @Query("method") method: Int = METHOD_MUSLIM_WORLD_LEAGUE,
-        @Query("school") school: Int = SCHOOL_HANAFI,
-    ): PrayerTimingsResponseDto
+        date: String,
+        latitude: Double,
+        longitude: Double,
+        method: Int = METHOD_MUSLIM_WORLD_LEAGUE,
+        school: Int = SCHOOL_HANAFI,
+    ): PrayerTimingsResponseDto = client.get {
+        url { appendPathSegments("v1", "timings", date) }
+        parameter("latitude", latitude)
+        parameter("longitude", longitude)
+        parameter("method", method)
+        parameter("school", school)
+    }.body()
 
     companion object {
         /**

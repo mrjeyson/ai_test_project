@@ -3,7 +3,7 @@ package com.example.test_ai_project.network.di
 import javax.inject.Qualifier
 
 /**
- * Marks the OkHttp client and Retrofit instance that talk to TMDB.
+ * Marks the `HttpClient` that talks to TMDB.
  *
  * The app has two backends with nothing in common, and the distinction has to be
  * enforceable: the TMDB client carries a bearer token, and attaching that token to

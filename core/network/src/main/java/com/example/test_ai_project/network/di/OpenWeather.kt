@@ -3,7 +3,7 @@ package com.example.test_ai_project.network.di
 import javax.inject.Qualifier
 
 /**
- * Marks the Retrofit instance and OkHttp client that talk to OpenWeatherMap.
+ * Marks the `HttpClient` that talks to OpenWeatherMap.
  *
  * A qualifier for the same reason as [Tmdb]: this backend needs a credential of its own, so
  * it gets a client of its own. Naming it makes it a compile error to build the weather API on

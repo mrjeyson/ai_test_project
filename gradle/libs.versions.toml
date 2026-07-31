@@ -33,7 +33,11 @@ navigationCompose = "2.9.8"
 playServicesLocation = "21.4.0"
 playServicesMaps = "19.2.0"
 okhttp = "5.4.0"
-retrofit = "3.0.0"
+# Ktor 3.3 is the last line whose `kotlin-stdlib` constraint stays on 2.2.x — 3.4+ pulls
+# stdlib 2.3, which would drag the whole build past the Kotlin 2.2.10 this project compiles
+# with. Same rule as the maps-compose pin above. The OkHttp engine in this line already
+# targets OkHttp 5, so it agrees with the BOM below instead of downgrading it.
+ktor = "3.3.3"
 room = "2.8.4"
 serializationJson = "1.11.0"
 
@@ -110,13 +114,20 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
-# Network
+# Network. Ktor is the HTTP client: `client-core` carries `HttpClient` and the request
+# builders, `client-okhttp` is the engine underneath it, `content-negotiation` +
+# `serialization-kotlinx-json` turn bodies into DTOs, and `client-logging` replaces OkHttp's
+# logging interceptor. `client-mock` is a MockEngine for tests — it stands in for the engine,
+# so an API class can be exercised with no socket and no MockWebServer.
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serializationJson" }
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp" }
-okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
-retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 # Persistence
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
