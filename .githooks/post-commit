@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# Auto-push every commit to origin.
+#
+# Enabled per clone (git will not do this for you) with:
+#   git config core.hooksPath .githooks
+#
+# Skip the push for a single commit:
+#   SKIP_AUTO_PUSH=1 git commit -m "wip"
+# Turn it off for your clone:
+#   git config --unset core.hooksPath
+
+[ -n "$SKIP_AUTO_PUSH" ] && exit 0
+
+git_dir=$(git rev-parse --git-dir)
+
+# Mid-rebase / mid-merge / mid-cherry-pick: history is unstable, don't push.
+for state in rebase-merge rebase-apply MERGE_HEAD CHERRY_PICK_HEAD; do
+	if [ -e "$git_dir/$state" ]; then
+		echo "post-commit: $state in progress, skipping auto-push"
+		exit 0
+	fi
+done
+
+branch=$(git symbolic-ref --short -q HEAD) || {
+	echo "post-commit: detached HEAD, skipping auto-push"
+	exit 0
+}
+
+if git rev-parse --verify -q "@{upstream}" >/dev/null; then
+	push_args="origin $branch"
+else
+	push_args="-u origin $branch"
+fi
+
+echo "post-commit: pushing $branch to origin..."
+if ! git push $push_args; then
+	echo "post-commit: push failed. The commit is safe locally."
+	echo "  Diverged from origin (e.g. after --amend or rebase)? Push it yourself:"
+	echo "    git push --force-with-lease origin $branch"
+fi
+
+exit 0
