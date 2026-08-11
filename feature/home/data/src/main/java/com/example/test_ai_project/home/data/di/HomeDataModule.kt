@@ -71,3 +71,4 @@ internal abstract class HomeDataModule {
     @Singleton
     internal abstract fun bindsTimeProvider(implementation: SystemTimeProvider): TimeProvider
 }
+
