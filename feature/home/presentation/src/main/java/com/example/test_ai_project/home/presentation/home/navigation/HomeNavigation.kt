@@ -21,8 +21,8 @@ fun NavController.navigateToHome(navOptions: NavOptionsBuilder.() -> Unit = {}) 
     navigate(route = HomeRouteKey, builder = navOptions)
 }
 
-fun NavGraphBuilder.homeScreen() {
+fun NavGraphBuilder.homeScreen(onSignedOut: () -> Unit) {
     composable<HomeRouteKey> {
-        HomeScreen()
+        HomeScreen(onSignedOut = onSignedOut)
     }
 }

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Gear as a ring with eight radial teeth rather than a single toothed outline: at 24dp the
+     notches of a toothed outline close up into a blurred circle, while separate strokes stay
+     distinct. Matches the 1.7 stroke weight of the other tab icons. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M5,12 a7,7 0 1 0 14,0 a7,7 0 1 0 -14,0"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.7" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M8.9,12 a3.1,3.1 0 1 0 6.2,0 a3.1,3.1 0 1 0 -6.2,0"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.7" />
+    <path
+        android:pathData="M12,5 V3.4"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.7" />
+    <path
+        android:pathData="M12,19 V20.6"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.7" />
+    <path
+        android:pathData="M5,12 H3.4"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.7" />
+    <path
+        android:pathData="M19,12 H20.6"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.7" />
+    <path
+        android:pathData="M7.05,7.05 L5.92,5.92"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.7" />
+    <path
+        android:pathData="M16.95,7.05 L18.08,5.92"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.7" />
+    <path
+        android:pathData="M7.05,16.95 L5.92,18.08"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.7" />
+    <path
+        android:pathData="M16.95,16.95 L18.08,18.08"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.7" />
+</vector>

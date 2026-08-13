@@ -1,6 +1,9 @@
 plugins {
     id("testai.android.library")
     id("testai.android.compose")
+    // The design system owns which palette is painted, and that outlives a composition —
+    // so the store behind it is an injectable singleton like any other service.
+    id("testai.android.hilt")
 }
 
 android {

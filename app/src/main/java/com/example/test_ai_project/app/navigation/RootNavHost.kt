@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.test_ai_project.auth.presentation.faceverification.navigation.FaceVerificationRoutes
 import com.example.test_ai_project.auth.presentation.faceverification.navigation.faceVerificationScreen
 import com.example.test_ai_project.auth.presentation.faceverification.navigation.navigateToFaceVerification
+import com.example.test_ai_project.home.presentation.home.navigation.HomeRouteKey
 import com.example.test_ai_project.home.presentation.home.navigation.homeScreen
 import com.example.test_ai_project.home.presentation.home.navigation.navigateToHome
 import com.example.test_ai_project.auth.presentation.login.navigation.LoginRoutes
@@ -71,7 +72,16 @@ fun RootNavHost(
                     },
                 )
 
-                homeScreen()
+                homeScreen(
+                    // The mirror image of `onAuthenticated`: home leaves the stack the way
+                    // login found it, so `back` from the credentials form exits the app
+                    // rather than walking back into a signed-out session.
+                    onSignedOut = {
+                        navController.navigateToLogin {
+                            popUpTo<HomeRouteKey> { inclusive = true }
+                        }
+                    },
+                )
             }
 
             AppToastHost(

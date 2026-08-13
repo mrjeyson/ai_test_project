@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -35,7 +36,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.test_ai_project.resource.component.BrandWordmark
 import com.example.test_ai_project.resource.theme.AppTheme
-import com.example.test_ai_project.resource.theme.VaultHairline
 import com.example.test_ai_project.home.presentation.home.navigation.HomeNavHost
 import com.example.test_ai_project.home.presentation.home.navigation.HomeTab
 import com.example.test_ai_project.resource.R as CoreUiR
@@ -43,7 +43,7 @@ import com.example.test_ai_project.resource.R as ResR
 import com.example.test_ai_project.home.presentation.R
 
 /**
- * The home shell: brand bar, navigation bar, and the frame the four tabs are drawn into.
+ * The home shell: brand bar, navigation bar, and the frame the tabs are drawn into.
  *
  * It owns no data of its own — the tabs behind [HomeNavHost] fetch what they render — so
  * there is no `HomeRoute`/`HomeScreen` pair here. That split exists to keep Hilt out of a
@@ -51,6 +51,7 @@ import com.example.test_ai_project.home.presentation.R
  */
 @Composable
 fun HomeScreen(
+    onSignedOut: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -62,7 +63,11 @@ fun HomeScreen(
         onTabSelected = navController::switchTo,
         modifier = modifier,
     ) { contentModifier ->
-        HomeNavHost(navController = navController, modifier = contentModifier)
+        HomeNavHost(
+            navController = navController,
+            onSignedOut = onSignedOut,
+            modifier = contentModifier,
+        )
     }
 }
 
@@ -98,7 +103,15 @@ private fun HomeShell(
 @Composable
 private fun HomeTopBar(modifier: Modifier = Modifier) {
     Surface(modifier = modifier, color = MaterialTheme.colorScheme.surface) {
-        Column {
+        // Inset inside the Surface, not around it: the padding pushes the brand row clear of
+        // the status bar while the surface colour keeps painting behind it. Insetting the
+        // Surface instead would leave the clock sitting on the page background, and the bar
+        // would read as floating rather than as the top of the app.
+        //
+        // `Scaffold` will not do this for us — it insets the content slot it measures, and
+        // leaves a top bar to consume what it needs, which is what `TopAppBar` does
+        // internally and this hand-built bar has to do itself.
+        Column(modifier = Modifier.statusBarsPadding()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -119,7 +132,7 @@ private fun HomeTopBar(modifier: Modifier = Modifier) {
                 LocalSecureBadge()
             }
 
-            HorizontalDivider(color = VaultHairline)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
     }
 }

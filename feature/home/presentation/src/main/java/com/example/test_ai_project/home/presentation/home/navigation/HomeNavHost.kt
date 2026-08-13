@@ -8,6 +8,7 @@ import com.example.test_ai_project.home.presentation.map.navigation.mapScreen
 import com.example.test_ai_project.home.presentation.movies.navigation.moviesScreen
 import com.example.test_ai_project.home.presentation.weather.navigation.weatherScreen
 import com.example.test_ai_project.home.presentation.prayertimes.navigation.prayerTimesScreen
+import com.example.test_ai_project.home.presentation.settings.navigation.settingsScreen
 import com.example.test_ai_project.home.presentation.map.navigation.MapRouteKey
 import com.example.test_ai_project.home.presentation.movies.navigation.MoviesRouteKey
 import com.example.test_ai_project.home.presentation.prayertimes.navigation.PrayerTimesRouteKey
@@ -16,7 +17,7 @@ import com.example.test_ai_project.home.presentation.weather.navigation.WeatherR
 /**
  * The graph *inside* the home shell.
  *
- * Deliberately a second, nested [NavHost] rather than four destinations in the app graph:
+ * Deliberately a second, nested [NavHost] rather than one destination per tab in the app graph:
  * each tab has to keep its own back stack and scroll position across switches, and the
  * navigation bar has to stay put while the content changes. Both fall out of nesting.
  *
@@ -27,6 +28,7 @@ import com.example.test_ai_project.home.presentation.weather.navigation.WeatherR
 @Composable
 internal fun HomeNavHost(
     navController: NavHostController,
+    onSignedOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -38,5 +40,6 @@ internal fun HomeNavHost(
         mapScreen()
         prayerTimesScreen()
         weatherScreen()
+        settingsScreen(onSignedOut = onSignedOut)
     }
 }

@@ -229,7 +229,7 @@ internal fun MapScreen(
                 }
             },
             containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = VaultTeal,
+            contentColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
         ) {
             if (uiState.isLocating) {
@@ -256,6 +256,9 @@ private fun UserMarker(location: UserLocation) {
     val position = location.toLatLng()
 
     location.accuracyMeters?.let { accuracy ->
+        // The brand teal literally, not `colorScheme.primary`: this is painted onto Google's
+        // tiles, which stay light whichever theme the app is in, so the accent that follows
+        // the app into the dark scheme would be the wrong one here.
         Circle(
             center = position,
             radius = accuracy.toDouble(),

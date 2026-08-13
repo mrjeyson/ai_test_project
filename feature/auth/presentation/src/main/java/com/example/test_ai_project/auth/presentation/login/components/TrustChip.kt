@@ -15,7 +15,7 @@ import com.example.test_ai_project.resource.R as ResR
 import com.example.test_ai_project.resource.component.AppIcon
 import com.example.test_ai_project.resource.component.AppText
 import com.example.test_ai_project.resource.theme.AppTextStyle
-import com.example.test_ai_project.resource.theme.VaultLabel
+import com.example.test_ai_project.resource.theme.vaultFieldLabel
 import com.example.test_ai_project.resource.theme.scaled
 import com.example.test_ai_project.resource.theme.spacing
 
@@ -38,13 +38,13 @@ internal fun TrustChip(modifier: Modifier = Modifier) {
                 id = ResR.drawable.ic_shield,
                 contentDescription = null,
                 size = 13.scaled,
-                tint = VaultLabel,
+                tint = vaultFieldLabel,
             )
             Spacer(modifier = Modifier.width(spacing.small))
             AppText(
                 text = stringResource(id = ResR.string.login_trust_chip),
                 style = AppTextStyle.LabelSmall,
-                color = VaultLabel,
+                color = vaultFieldLabel,
             )
         }
     }

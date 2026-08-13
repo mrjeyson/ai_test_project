@@ -33,7 +33,7 @@ directly.
 | Layer | Modules | Purpose |
 |---|---|---|
 | `app` | `:app` | `TestAiApplication`, `MainActivity`, `RootNavHost` |
-| `core` | `:core:resource`, `:core:network`, `:core:database` | Design system + MVI base, HTTP, Room |
+| `core` | `:core:resource`, `:core:network`, `:core:database` | Design system + MVI base + theme choice, HTTP, Room |
 | `feature` | `:feature:<name>:domain` + `:data` + `:presentation` | One trio per feature (`auth`, `home`) |
 
 `:core:resource` is the design system **and** carries the MVI base (`BaseViewModel`,
@@ -68,7 +68,7 @@ other's rules, because they do not share any.
   - `:core:network` → `…test_ai_project.network`; `:feature:auth:domain` →
     `…test_ai_project.auth.domain`.
 - **A feature is a flow, not a screen.** `:feature:auth` covers both the credentials form
-  and the face check, and `:feature:home` covers all four tabs — one trio each, with a
+  and the face check, and `:feature:home` covers every home tab — one trio each, with a
   folder per screen under `presentation/`. Splitting per screen would multiply Gradle
   modules without splitting anything that actually varies independently.
 - **Every file lives in a concern folder — nothing loose at a package root.**
@@ -103,15 +103,17 @@ past its own service contracts.
 
 Each screen owns a `navigation/` folder with route constants (`object XxxRoutes`) and a
 `NavGraphBuilder.xxxScreen(...)` extension. `RootNavHost` registers them and wires
-cross-screen transitions via lambdas (`onAuthenticated`, `onVerified`). Launch order —
+cross-screen transitions via lambdas (`onAuthenticated`, `onVerified`, `onSignedOut` —
+which the home shell hands down to the settings tab). Launch order —
 login → face verification → home — lives in `RootNavHost` and nowhere else. Both auth
 screens register from `:feature:auth:presentation`, so the flow between them is still the
 root graph's decision rather than one screen naming another.
 
 ## UI / Design system (`:core:resource`)
 
-Packages: `component/` (the `App*` widgets), `theme/` (tokens), `util/` (`CollectAsEffect`),
-`base/` (MVI), `preview/` (`DevicePreview`).
+Packages: `component/` (the `App*` widgets), `theme/` (tokens, schemes, `ThemeService`),
+`util/` (`CollectAsEffect`), `base/` (MVI), `preview/` (`DevicePreview`), `di/` (the theme
+binding — the module's one `@Binds`, and the reason it applies `testai.android.hilt`).
 
 ### Responsive scaling (no breakpoints)
 
@@ -121,14 +123,39 @@ Packages: `component/` (the `App*` widgets), `theme/` (tokens), `util/` (`Collec
 
 - `Spacing(small=8, medium=16, large=24)` via `spacing`
 - `Sizes(buttonHeight, icon, iconLarge, radius, avatar, contentMaxWidth)` via `sizes`
-- One light `VaultColorScheme`; the dark surfaces (launch window, viewfinder) paint from
-  brand tokens directly.
+
+### Light and dark
+
+Two schemes, `VaultColorScheme` and `VaultDarkColorScheme`, role for role. Which one is
+painted is `AppTheme(darkTheme = …)` — a **parameter**, so the composable stays previewable;
+`:app` is the single caller that decides, by collecting `ThemeService.mode`. The settings tab
+writes that same service. It does **not** follow the system setting: an explicit choice on
+the settings tab is more specific than a phone-wide default, and with no stored choice the
+app is light, as designed.
+
+`ThemeService` is stored in SharedPreferences, not Room — it has to answer *before* the first
+frame, and a value that arrived a frame late would be visible as the app opening light and
+turning dark.
+
+Consequences for screens:
+
+- **Name a role, not a colour.** `MaterialTheme.colorScheme.onSurfaceVariant`, not
+  `VaultStone` — the light scheme maps every role onto the brand token it replaced, so a
+  role is exactly the same colour it always was and additionally survives the toggle.
+- A brand token literally is right only where the surface under it does not follow the
+  theme: the viewfinder, the launch window, `BrandMark`'s tile, the accuracy circle on
+  Google's map tiles, and the chip that sits on `VaultTealLight` in both schemes.
+- The one inverted surface — the highlighted prayer row — is `inverseSurface` /
+  `inverseOnSurface`, which is charcoal on light and deepest ink on dark.
+- `vaultFieldLabel` is the single theme-aware brand colour, for field labels, which are
+  deliberately stronger than `onSurfaceVariant` in either scheme.
 
 ### Rules (enforced)
 
 1. **Design-system only**: screens do not use raw Material3 `Text`/`Button`/`Icon`/
    `TextField` or Coil directly. Use `AppText`, `AppButton`, `AppTextField`, `AppIcon`,
-   `AppProgressIndicator`, `AppNetworkImage`, `AppLoadingState`, `AppErrorState`.
+   `AppProgressIndicator`, `AppNetworkImage`, `AppSwitch`, `AppLoadingState`,
+   `AppErrorState`.
    Typography goes through the **`AppTextStyle`** enum, not `MaterialTheme.typography`.
    (`MaterialTheme.colorScheme` is still used directly for colours.)
 2. **Screen/Content split**: every screen has a `Screen()` (with `hiltViewModel()`, effect

@@ -6,11 +6,12 @@ import com.example.test_ai_project.home.presentation.R
 import com.example.test_ai_project.home.presentation.map.navigation.MapRouteKey
 import com.example.test_ai_project.home.presentation.movies.navigation.MoviesRouteKey
 import com.example.test_ai_project.home.presentation.prayertimes.navigation.PrayerTimesRouteKey
+import com.example.test_ai_project.home.presentation.settings.navigation.SettingsRouteKey
 import com.example.test_ai_project.home.presentation.weather.navigation.WeatherRouteKey
 import com.example.test_ai_project.resource.R as ResR
 
 /**
- * The four top-level destinations of the home shell, in the order the design puts them
+ * The top-level destinations of the home shell, in the order the design puts them
  * in the navigation bar.
  *
  * The enum is the single source of truth: [HomeNavHost] registers one destination per
@@ -45,6 +46,11 @@ enum class HomeTab(
         routeKey = WeatherRouteKey,
         labelRes = ResR.string.home_tab_weather,
         iconRes = R.drawable.ic_tab_weather,
+    ),
+    Settings(
+        routeKey = SettingsRouteKey,
+        labelRes = ResR.string.home_tab_settings,
+        iconRes = R.drawable.ic_tab_settings,
     ),
     ;
 

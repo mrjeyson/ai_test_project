@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import com.example.test_ai_project.resource.component.AppIcon
 import com.example.test_ai_project.resource.component.AppText
 import com.example.test_ai_project.resource.theme.AppTextStyle
-import com.example.test_ai_project.resource.theme.VaultLabel
+import com.example.test_ai_project.resource.theme.vaultFieldLabel
 import com.example.test_ai_project.resource.theme.scaled
 import com.example.test_ai_project.resource.theme.spacing
 
@@ -27,9 +27,9 @@ internal fun FieldLabel(
             // Decorative: the label next to it already says what the field is.
             contentDescription = null,
             size = 14.scaled,
-            tint = VaultLabel,
+            tint = vaultFieldLabel,
         )
         Spacer(modifier = Modifier.width(spacing.small))
-        AppText(text = label, style = AppTextStyle.LabelSmall, color = VaultLabel)
+        AppText(text = label, style = AppTextStyle.LabelSmall, color = vaultFieldLabel)
     }
 }

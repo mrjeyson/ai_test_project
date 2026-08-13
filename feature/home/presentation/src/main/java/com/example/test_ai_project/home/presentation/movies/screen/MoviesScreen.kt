@@ -36,7 +36,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.test_ai_project.home.domain.model.Movie
 import com.example.test_ai_project.resource.component.AppLoadingState
 import com.example.test_ai_project.resource.theme.AppTheme
-import com.example.test_ai_project.resource.theme.VaultHairline
 import com.example.test_ai_project.home.presentation.R
 import com.example.test_ai_project.home.presentation.movies.contract.MoviesEvent
 import com.example.test_ai_project.home.presentation.movies.contract.MoviesState
@@ -121,7 +120,7 @@ internal fun MoviesScreen(
         }
 
         if (uiState.isPagingVisible) {
-            HorizontalDivider(color = VaultHairline)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             PageControl(
                 currentPage = uiState.page,
                 totalPages = uiState.totalPages,

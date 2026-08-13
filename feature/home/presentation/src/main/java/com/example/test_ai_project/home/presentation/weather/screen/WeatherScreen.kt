@@ -64,11 +64,6 @@ import com.example.test_ai_project.home.domain.model.CurrentWeather
 import com.example.test_ai_project.home.domain.model.WeatherCondition
 import com.example.test_ai_project.resource.component.AppLoadingState
 import com.example.test_ai_project.resource.theme.AppTheme
-import com.example.test_ai_project.resource.theme.VaultCharcoal
-import com.example.test_ai_project.resource.theme.VaultHairline
-import com.example.test_ai_project.resource.theme.VaultMistDeep
-import com.example.test_ai_project.resource.theme.VaultStone
-import com.example.test_ai_project.resource.theme.VaultTeal
 import com.example.test_ai_project.home.presentation.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -259,14 +254,14 @@ private fun OfflineStatusStrip(
                                 // Amber would be the obvious choice for stale and is the wrong
                                 // one: the dot reports that the data is on disk, which is just as
                                 // true when it is old. The wording beside it carries the age.
-                                color = if (isStale) VaultStone else VaultTeal,
+                                color = if (isStale) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
                                 shape = CircleShape,
                             ),
                     )
                     Text(
                         text = stringResource(id = ResR.string.weather_cached_badge),
                         style = MaterialTheme.typography.labelSmall,
-                        color = VaultStone,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = 8.dp),
                     )
                 }
@@ -282,12 +277,12 @@ private fun OfflineStatusStrip(
                             lastUpdatedLabel,
                         ),
                         style = MaterialTheme.typography.bodySmall,
-                        color = VaultStone,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
 
-            HorizontalDivider(color = VaultHairline)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
     }
 }
@@ -316,7 +311,7 @@ private fun CurrentConditionsCard(
                     Text(
                         text = stringResource(id = ResR.string.weather_current_location),
                         style = MaterialTheme.typography.labelSmall,
-                        color = VaultStone,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
 
                     Row(
@@ -332,7 +327,7 @@ private fun CurrentConditionsCard(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_place),
                             contentDescription = null,
-                            tint = VaultStone,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 6.dp).size(13.dp),
                         )
                     }
@@ -351,7 +346,7 @@ private fun CurrentConditionsCard(
                         Text(
                             text = current.conditionCaption(),
                             style = MaterialTheme.typography.bodyLarge,
-                            color = VaultStone,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(start = 10.dp, bottom = 8.dp),
                         )
                     }
@@ -362,7 +357,7 @@ private fun CurrentConditionsCard(
                     // Decorative: the caption beside it already names the condition in the
                     // provider's own words, and repeating it would double every announcement.
                     contentDescription = null,
-                    tint = VaultStone.copy(alpha = 0.4f),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
                     modifier = Modifier.padding(top = 8.dp).size(64.dp),
                 )
             }
@@ -418,7 +413,7 @@ private fun RangeCell(
         Text(
             text = stringResource(id = labelRes),
             style = MaterialTheme.typography.labelSmall,
-            color = VaultStone,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
             text = value.asDegrees(),
@@ -492,12 +487,12 @@ private fun HourlyColumnItem(
             // The leading column is where the user is standing, so it is the one anchor the rest
             // of the strip is read against.
             fontWeight = if (column.isNow) FontWeight.Bold else FontWeight.Normal,
-            color = if (column.isNow) VaultTeal else VaultStone,
+            color = if (column.isNow) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Icon(
             painter = painterResource(id = column.condition.iconRes(column.isNight)),
             contentDescription = stringResource(id = column.condition.labelRes),
-            tint = VaultTeal,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(vertical = 8.dp).size(20.dp),
         )
         Text(
@@ -585,7 +580,7 @@ private fun DetailRow(
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
-                tint = VaultStone,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(17.dp),
             )
             Text(
@@ -653,7 +648,7 @@ private fun DailyForecastRowItem(
             },
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = if (row.isToday) FontWeight.Bold else FontWeight.Normal,
-            color = if (row.isToday) MaterialTheme.colorScheme.onSurface else VaultStone,
+            color = if (row.isToday) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.width(52.dp),
         )
 
@@ -662,7 +657,7 @@ private fun DailyForecastRowItem(
             // "is the sun up", and the condition it shows is sampled at midday anyway.
             painter = painterResource(id = row.condition.iconRes(isNight = false)),
             contentDescription = stringResource(id = row.condition.labelRes),
-            tint = VaultTeal,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(18.dp),
         )
 
@@ -683,7 +678,7 @@ private fun DailyForecastRowItem(
         Text(
             text = row.lowCelsius.asDegrees(),
             style = MaterialTheme.typography.bodyMedium,
-            color = VaultStone,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.End,
             modifier = Modifier.width(34.dp),
         )
@@ -704,8 +699,8 @@ private fun TemperatureBar(
     endFraction: Float,
     modifier: Modifier = Modifier,
 ) {
-    val trackColor = VaultMistDeep
-    val fillColor = VaultCharcoal
+    val trackColor = MaterialTheme.colorScheme.surfaceVariant
+    val fillColor = MaterialTheme.colorScheme.onSurface
 
     Canvas(modifier = modifier.height(6.dp)) {
         val radius = CornerRadius(size.height / 2f)
@@ -741,7 +736,7 @@ private fun SectionHeading(
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = null,
-            tint = VaultStone,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(15.dp),
         )
         Text(
@@ -755,7 +750,7 @@ private fun SectionHeading(
             Text(
                 text = stringResource(id = trailingRes),
                 style = MaterialTheme.typography.labelMedium,
-                color = VaultTeal,
+                color = MaterialTheme.colorScheme.primary,
             )
         }
     }
@@ -781,7 +776,7 @@ private fun LocationRow(
             Icon(
                 painter = painterResource(id = R.drawable.ic_place),
                 contentDescription = null,
-                tint = VaultStone,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(17.dp),
             )
             Text(
@@ -800,7 +795,7 @@ private fun LocationRow(
                         },
                     ),
                     style = MaterialTheme.typography.labelMedium,
-                    color = if (isRefreshing) VaultStone else VaultTeal,
+                    color = if (isRefreshing) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -859,7 +854,7 @@ private fun EmptyState(onRetry: () -> Unit, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(id = ResR.string.weather_empty_body),
             style = MaterialTheme.typography.bodyMedium,
-            color = VaultStone,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp),
         )

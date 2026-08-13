@@ -41,7 +41,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -59,10 +58,6 @@ import com.example.test_ai_project.home.domain.model.Prayer
 import com.example.test_ai_project.resource.component.AppLoadingState
 import com.example.test_ai_project.resource.theme.AppTheme
 import com.example.test_ai_project.resource.theme.VaultCharcoal
-import com.example.test_ai_project.resource.theme.VaultHairline
-import com.example.test_ai_project.resource.theme.VaultMistDeep
-import com.example.test_ai_project.resource.theme.VaultStone
-import com.example.test_ai_project.resource.theme.VaultTeal
 import com.example.test_ai_project.resource.theme.VaultTealLight
 import com.example.test_ai_project.home.presentation.R
 import java.text.SimpleDateFormat
@@ -258,12 +253,12 @@ private fun OfflineStatusStrip(
                     Box(
                         modifier = Modifier
                             .size(7.dp)
-                            .background(color = VaultTeal, shape = CircleShape),
+                            .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape),
                     )
                     Text(
                         text = stringResource(id = ResR.string.prayer_cached_badge),
                         style = MaterialTheme.typography.labelSmall,
-                        color = VaultStone,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = 8.dp),
                     )
                 }
@@ -272,12 +267,12 @@ private fun OfflineStatusStrip(
                     Text(
                         text = stringResource(id = ResR.string.prayer_last_update, lastUpdatedLabel),
                         style = MaterialTheme.typography.bodySmall,
-                        color = VaultStone,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
 
-            HorizontalDivider(color = VaultHairline)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
     }
 }
@@ -316,7 +311,7 @@ private fun NextPrayerCard(
                 Text(
                     text = stringResource(id = ResR.string.prayer_all_complete),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = VaultStone,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                 )
                 return@Column
@@ -330,7 +325,7 @@ private fun NextPrayerCard(
                     stringResource(id = next.prayer.labelRes).uppercase(locale),
                 ),
                 style = MaterialTheme.typography.labelSmall,
-                color = VaultStone,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -345,7 +340,7 @@ private fun NextPrayerCard(
                 Text(
                     text = stringResource(id = ResR.string.prayer_remaining),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = VaultStone,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 8.dp, bottom = 5.dp),
                 )
             }
@@ -356,7 +351,7 @@ private fun NextPrayerCard(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_clock_small),
                     contentDescription = null,
-                    tint = VaultTeal,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(14.dp),
                 )
                 Text(
@@ -369,7 +364,7 @@ private fun NextPrayerCard(
                         formatTime(next.startEpochMillis),
                     ),
                     style = MaterialTheme.typography.bodySmall,
-                    color = VaultTeal,
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(start = 6.dp),
                 )
             }
@@ -383,6 +378,10 @@ private fun NextPrayerCard(
  * The next prayer is inverted rather than merely accented, because it is the one thing on
  * the page a user opens the app to find. A tinted border would be a hint; a dark card in a
  * column of white ones is unmissable at arm's length.
+ *
+ * `inverseSurface` rather than a charcoal constant, so that "the card that opposes the page"
+ * survives the theme toggle: in the dark scheme it resolves to the deepest ink instead, and
+ * the white-and-teal content it carries goes on working untouched.
  */
 @Composable
 private fun PrayerRow(
@@ -395,7 +394,7 @@ private fun PrayerRow(
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(14.dp),
-        color = if (isNext) VaultCharcoal else MaterialTheme.colorScheme.surface,
+        color = if (isNext) MaterialTheme.colorScheme.inverseSurface else MaterialTheme.colorScheme.surface,
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
@@ -407,7 +406,7 @@ private fun PrayerRow(
                     .background(
                         // On the dark card a mist-coloured disc would be a bright hole, so
                         // the circle becomes a barely-there lift instead.
-                        color = if (isNext) Color.White.copy(alpha = 0.08f) else VaultMistDeep,
+                        color = if (isNext) MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = 0.08f) else MaterialTheme.colorScheme.surfaceVariant,
                         shape = CircleShape,
                     ),
                 contentAlignment = Alignment.Center,
@@ -415,7 +414,7 @@ private fun PrayerRow(
                 Icon(
                     painter = painterResource(id = entry.prayer.iconRes),
                     contentDescription = null,
-                    tint = if (isNext) VaultTealLight else VaultStone,
+                    tint = if (isNext) VaultTealLight else MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(19.dp),
                 )
             }
@@ -425,12 +424,12 @@ private fun PrayerRow(
                     text = stringResource(id = entry.prayer.labelRes),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (isNext) Color.White else MaterialTheme.colorScheme.onSurface,
+                    color = if (isNext) MaterialTheme.colorScheme.inverseOnSurface else MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
                     text = stringResource(id = entry.prayer.captionRes),
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (isNext) VaultTealLight else VaultStone,
+                    color = if (isNext) VaultTealLight else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 
@@ -439,7 +438,7 @@ private fun PrayerRow(
                     text = formatTime(entry.startEpochMillis),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (isNext) Color.White else MaterialTheme.colorScheme.onSurface,
+                    color = if (isNext) MaterialTheme.colorScheme.inverseOnSurface else MaterialTheme.colorScheme.onSurface,
                 )
                 StatusChip(status = entry.status)
             }
@@ -465,13 +464,15 @@ private fun StatusChip(status: PrayerStatus, modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier.padding(top = 4.dp),
         shape = RoundedCornerShape(4.dp),
-        color = if (status == PrayerStatus.Next) VaultTealLight else VaultMistDeep,
+        color = if (status == PrayerStatus.Next) VaultTealLight else MaterialTheme.colorScheme.surfaceVariant,
     ) {
         Text(
             text = stringResource(id = labelRes),
             style = MaterialTheme.typography.labelSmall,
             fontSize = 9.sp,
-            color = if (status == PrayerStatus.Next) VaultCharcoal else VaultStone,
+            // Charcoal literally, in both schemes: the chip behind it is [VaultTealLight]
+            // in both, and a label that followed the theme would be white on pale teal.
+            color = if (status == PrayerStatus.Next) VaultCharcoal else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
         )
     }
@@ -497,7 +498,7 @@ private fun LocationRow(
             Icon(
                 painter = painterResource(id = R.drawable.ic_place),
                 contentDescription = null,
-                tint = VaultStone,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(17.dp),
             )
             Text(
@@ -512,7 +513,7 @@ private fun LocationRow(
                         id = if (isLocating) ResR.string.prayer_locating else ResR.string.prayer_change_location,
                     ),
                     style = MaterialTheme.typography.labelMedium,
-                    color = if (isLocating) VaultStone else VaultTeal,
+                    color = if (isLocating) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -571,7 +572,7 @@ private fun EmptyState(onRetry: () -> Unit, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(id = ResR.string.prayer_empty_body),
             style = MaterialTheme.typography.bodyMedium,
-            color = VaultStone,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp),
         )

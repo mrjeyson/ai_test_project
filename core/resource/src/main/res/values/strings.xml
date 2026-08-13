@@ -109,13 +109,14 @@
     <string name="face_verification_cancel">Cancel</string>
 
     <!-- ============================= Home ============================= -->
-    <!-- Navigation bar labels. Short by necessity — four items share the bar width, and
-         anything longer than "Weather" is ellipsised on a small screen. "Prayer" rather
+    <!-- Navigation bar labels. Short by necessity — five items share the bar width, and
+         anything longer than "Settings" is ellipsised on a small screen. "Prayer" rather
          than "Prayer times" for that reason; the page itself carries the full title. -->
     <string name="home_tab_movies">Movies</string>
     <string name="home_tab_map">Map</string>
     <string name="home_tab_prayer">Prayer</string>
     <string name="home_tab_weather">Weather</string>
+    <string name="home_tab_settings">Settings</string>
 
     <string name="home_local_secure">LOCAL SECURE</string>
 
@@ -316,5 +317,18 @@
 
     <string name="weather_empty_title">No weather saved yet</string>
     <string name="weather_empty_body">Connect once and the last reading stays available offline.</string>
+
+    <!-- Settings -->
+    <string name="settings_appearance_title">Appearance</string>
+    <string name="settings_dark_theme_label">Dark theme</string>
+    <!-- Says the choice is remembered, because the alternative reading — that it lasts
+         until the app closes — is the one a user has been trained to expect elsewhere. -->
+    <string name="settings_dark_theme_caption">Paint the app in the dark palette. Remembered on this device.</string>
+
+    <string name="settings_session_title">Session</string>
+    <string name="settings_sign_out">Sign out</string>
+    <!-- The vault stays where it is: signing out ends the session, it does not un-enrol the
+         device. Saying so is what stops the button reading as destructive. -->
+    <string name="settings_sign_out_caption">Ends this session and returns to the credentials screen. Nothing stored on this device is erased.</string>
 
 </resources>
