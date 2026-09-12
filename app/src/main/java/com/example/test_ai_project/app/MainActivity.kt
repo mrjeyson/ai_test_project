@@ -78,4 +78,3 @@ class MainActivity : ComponentActivity() {
         SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
     }
 }
-
