@@ -41,3 +41,5 @@ class TestAiApplication : Application(), SingletonImageLoader.Factory {
         const val DISK_CACHE_BYTES = 256L * 1024 * 1024
     }
 }
+
+
