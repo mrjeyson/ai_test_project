@@ -25,3 +25,4 @@ data class PrayerDayEntity(
     val fetchedAtEpochMillis: Long,
 )
 
+
