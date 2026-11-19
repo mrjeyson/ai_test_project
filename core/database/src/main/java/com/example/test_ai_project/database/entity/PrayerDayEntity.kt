@@ -48,5 +48,3 @@ data class PrayerDayEntity(
 
 
 
-
-
